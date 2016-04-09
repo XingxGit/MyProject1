@@ -1,0 +1,20 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+		
+		
+		<mapping class="cn.sibat.warn.model.user.User" />
+		<mapping class="cn.sibat.warn.model.cases.CaseUpload" />
+		<mapping class="cn.sibat.warn.model.company.CompanyInfo" />
+		<mapping class="cn.sibat.warn.model.company.CompanyWarn" />
+		<mapping class="cn.sibat.warn.model.kpi.KPI" />
+		<mapping class="cn.sibat.warn.model.kpi.KPILightScore" />
+		
+		
+	</session-factory>
+
+</hibernate-configuration>
