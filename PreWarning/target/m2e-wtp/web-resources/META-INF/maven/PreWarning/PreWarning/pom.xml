@@ -6,7 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<repositories>
+	<!-- <repositories>
 		<repository>
 			<id>java.net.m2repo</id>
 			<name>java.net Maven 2 Repository</name>
@@ -25,7 +25,7 @@
 			<url>http://code.alibabatech.com/mvn/snapshots/</url>
 			<layout>default</layout>
 		</repository>
-	</repositories>
+	</repositories> -->
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -56,7 +56,7 @@
 		<hibernate.version>4.2.11.Final</hibernate.version>
 		<jackson.version>1.9.13</jackson.version>
 		<fastjson.version>1.1.39</fastjson.version>
-		<spring.version>3.2.8.RELEASE</spring.version>
+		<spring.version>4.2.5.RELEASE</spring.version>
 	</properties>
 
 	<dependencies>
@@ -67,7 +67,7 @@
 			<version>${fastjson.version}</version>
 		</dependency>
 		<!-- jackson -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.version}</version>
@@ -76,7 +76,14 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<version>${jackson.version}</version>
+		</dependency> -->
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.3</version>
 		</dependency>
+		
 
 		<dependency>
 			<groupId>log4j</groupId>
@@ -150,12 +157,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.38</version>
 		</dependency>
-
-		<!-- <dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<version>1.0.1.Final</version>
-		</dependency> -->
 
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>

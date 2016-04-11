@@ -14,6 +14,7 @@ public static void main(String[] args) {
 	session.createCriteria(User.class)
 	.setCacheable(true)
 	.list();
+	
 //	session.get(User.class, "2");
 	
 	Session session2 = hb.getSessionFactory().openSession();
@@ -21,5 +22,7 @@ public static void main(String[] args) {
 	.setCacheable(true)
 	.list();
 //	session2.get(User.class, "2");
+	hb.getSessionFactory().close();
+	
 }
 }

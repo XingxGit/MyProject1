@@ -17,18 +17,15 @@ public class ConnectionListener implements ServletContextListener{
 		try {
 			
 			AbandonedConnectionCleanupThread.shutdown();
-//			HibSession hs = HibSession.getInstance();
-//			hs.getSessionFactory().close();
+//			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+//	
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-//		HibSession hs = HibSession.getInstance();
-//		Session session = hs.getSessionFactory().openSession();
-//		session.createCriteria(User.class).list();
 	}
 
 }

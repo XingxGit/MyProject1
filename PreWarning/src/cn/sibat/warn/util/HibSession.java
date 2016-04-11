@@ -5,12 +5,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Repository;
 
 import cn.sibat.warn.model.user.User;
 @Repository
-public class HibSession {
-//	private static final HibSession hs = new HibSession();
+public class HibSession implements DisposableBean{
 	private SessionFactory sessionFactory = null;
 	public static HibSession getInstance() {
 		return new HibSession();
@@ -57,6 +57,11 @@ public class HibSession {
 		session.save(user);
 		session.getTransaction().commit();
 		session.close();
+	}
+	@Override
+	public void destroy() throws Exception {
+		this.sessionFactory.close();
+		
 	}
 
 }

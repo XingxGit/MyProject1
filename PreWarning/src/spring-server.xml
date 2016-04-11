@@ -16,6 +16,7 @@
    <context:component-scan base-package="cn.sibat.warn">
    </context:component-scan>
    <aop:aspectj-autoproxy proxy-target-class="true"/>
+   <context:annotation-config/>  
    <mvc:annotation-driven/>
 <!--    <bean name="/user/info" class="cn.xbus.api.MyFirstApi"/>  -->
    <!-- 开启注解 -->
