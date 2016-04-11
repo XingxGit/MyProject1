@@ -6,7 +6,6 @@ import cn.sibat.warn.model.kpi.KPI;
 import cn.sibat.warn.util.HibSession;
 
 public class ImportKPI {
-	
 	public static void main(String[] args) {
 		HibSession hs = HibSession.getInstance();
 		Session session = hs.getSessionFactory().openSession();
