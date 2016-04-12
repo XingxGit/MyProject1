@@ -117,7 +117,7 @@ public class Case {
 	
 	@RequestMapping(value="light_companyinfo",produces="application/json;charset=UTF-8") 
 	@ResponseBody
-	public Xing searchLightCompany(@RequestParam("light_grade") String light_grade,HttpSession session){
+	public Xing searchLightCompanyInfo(@RequestParam("light_grade") String light_grade,HttpSession session){
 		Boolean sign = auth.checkUser(session);
 		if(sign==false){
 			log.info("not sign in but use light_companyinfo");

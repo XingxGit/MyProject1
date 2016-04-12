@@ -11,13 +11,12 @@ import cn.sibat.warn.util.HashUtil;
 @Entity( name = "company_info")
 public class CompanyInfo implements Serializable{
 	private static final long serialVersionUID = 3319771014481485461L;
-	private String id;
 	private String company_id;
-	private String business_id;
-	private String company_scale;
-	private String address;
-	private String Contactor;
-	private String telephone;
+	private String industry_id;
+	private String company_size;
+	private String company_address;
+	private String contacts_name;
+	private String contacts_ways;
 	private String company_name;
 	private String street_name;
 	private String is_case;
@@ -26,16 +25,9 @@ public class CompanyInfo implements Serializable{
 	
 	public CompanyInfo() {
 		super();
-		this.id = HashUtil.getRandomId();
 		this.create_time = new Date();
 	}
 	@Id
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getCompany_id() {
 		return company_id;
 	}
@@ -43,36 +35,38 @@ public class CompanyInfo implements Serializable{
 		this.company_id = company_id;
 	}
 	
-	public String getBusiness_id() {
-		return business_id;
+	
+	public String getIndustry_id() {
+		return industry_id;
 	}
-	public void setBusiness_id(String business_id) {
-		this.business_id = business_id;
+	public void setIndustry_id(String industry_id) {
+		this.industry_id = industry_id;
 	}
-	public String getCompany_scale() {
-		return company_scale;
+	public String getCompany_size() {
+		return company_size;
 	}
-	public void setCompany_scale(String company_scale) {
-		this.company_scale = company_scale;
+	public void setCompany_size(String company_size) {
+		this.company_size = company_size;
 	}
-	public String getAddress() {
-		return address;
+	public String getCompany_address() {
+		return company_address;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setCompany_address(String company_address) {
+		this.company_address = company_address;
 	}
-	public String getContactor() {
-		return Contactor;
+	public String getContacts_name() {
+		return contacts_name;
 	}
-	public void setContactor(String contactor) {
-		Contactor = contactor;
+	public void setContacts_name(String contacts_name) {
+		this.contacts_name = contacts_name;
 	}
-	public String getTelephone() {
-		return telephone;
+	public String getContacts_ways() {
+		return contacts_ways;
 	}
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setContacts_ways(String contacts_ways) {
+		this.contacts_ways = contacts_ways;
 	}
+	
 	public String getCompany_name() {
 		return company_name;
 	}
