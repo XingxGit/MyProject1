@@ -1,5 +1,6 @@
 package cn.sibat.warn.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -46,6 +47,7 @@ public class Case {
 		}
 		log.info("execution upload_case api");
 		JSONArray array = JSONArray.fromObject(content);
+		List list = new ArrayList<>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = new JSONObject();
 			CaseUpload cs = new CaseUpload();
@@ -55,24 +57,19 @@ public class Case {
 				CaseUpload cp = caseDao.searchCaseByIds(obj.getString("company_id"), obj.getString("kpi_ids"));
 				if(cp!=null)
 					cp.setValue(obj.containsKey("value")==true?cp.getValue():obj.getString("value"));
-				
+				caseDao.updateCase(cp);
+				continue;
 			}
-				
 			
-				
 			if(obj.containsKey("agency"))
 				cs.setAgency(obj.getString("agency"));
 			if(obj.containsKey("user_id"))
 				cs.setUser_id(obj.getString("user_id"));
 			if(obj.containsKey("value"))
 				cs.setValue(obj.getString("value"));
-			
+			list.add(cs);
 		}
-		
-		
-		
-		caseDao.saveCase(cs);
-
+			caseDao.saveListCase(list);
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");

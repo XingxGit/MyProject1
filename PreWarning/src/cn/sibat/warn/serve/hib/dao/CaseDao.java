@@ -47,6 +47,9 @@ public class CaseDao {
 		return list;
 	}
 	
+	public void saveListCase(List list){
+		hu.batchSave(list);
+	}
 	
 	public void updateCase(CaseUpload cu){
 		hu.update(cu);
