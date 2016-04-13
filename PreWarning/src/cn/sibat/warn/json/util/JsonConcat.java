@@ -17,6 +17,7 @@ import net.sf.json.JSONObject;
  * 
  * @author zhangxing
  * 该程序可以将两个list根据指定的key合成一个jsonarray
+ * 版权所有，禁止非授权修改
  */
 public class JsonConcat {
 	
