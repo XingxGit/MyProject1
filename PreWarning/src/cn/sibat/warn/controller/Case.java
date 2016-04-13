@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope("session")
@@ -25,10 +27,13 @@ public class Case {
 	Logger log = Logger.getLogger(Case.class);
 	@RequestMapping(value="upload_case",produces="application/json;charset=UTF-8") 
 	@ResponseBody
-	public Xing uploadCase(@RequestParam("company_id") String company_id,
-			@RequestParam("kpi_ids") String kpi_ids,
-			@RequestParam("agency") String agency,
-			@RequestParam("user_id") String user_id,
+	public Xing uploadCase(
+//			@RequestParam("company_id") String company_id,
+//			@RequestParam("kpi_ids") String kpi_ids,
+//			@RequestParam("agency") String agency,
+//			@RequestParam("value") String value,
+//			@RequestParam("user_id") String user_id,
+			@RequestParam("content") String content,
 			HttpSession session
 			){
 		Boolean sign = auth.checkUser(session);
@@ -40,11 +45,32 @@ public class Case {
 			return x;
 		}
 		log.info("execution upload_case api");
-		CaseUpload cs = new CaseUpload();
-		cs.setCompany_id(company_id);
-		cs.setKpi_ids(kpi_ids);
-		cs.setAgency(agency);
-		cs.setUser_id(user_id);
+		JSONArray array = JSONArray.fromObject(content);
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = new JSONObject();
+			CaseUpload cs = new CaseUpload();
+			if(obj.containsKey("company_id")&&obj.containsKey("kpi_ids")){
+				cs.setCompany_id(obj.getString("company_id"));
+				cs.setKpi_ids(obj.getString("kpi_ids"));
+				CaseUpload cp = caseDao.searchCaseByIds(obj.getString("company_id"), obj.getString("kpi_ids"));
+				if(cp!=null)
+					cp.setValue(obj.containsKey("value")==true?cp.getValue():obj.getString("value"));
+				
+			}
+				
+			
+				
+			if(obj.containsKey("agency"))
+				cs.setAgency(obj.getString("agency"));
+			if(obj.containsKey("user_id"))
+				cs.setUser_id(obj.getString("user_id"));
+			if(obj.containsKey("value"))
+				cs.setValue(obj.getString("value"));
+			
+		}
+		
+		
+		
 		caseDao.saveCase(cs);
 
 			Xing x = new Xing();

@@ -19,6 +19,7 @@ public class CaseUpload implements Serializable{
 	private String agency;
 	private String user_id;
 	private Date upload_time;
+	private String value;
 	public CaseUpload() {
 		super();
 		this.id = HashUtil.getRandomId();
@@ -51,6 +52,12 @@ public class CaseUpload implements Serializable{
 	}
 	
 	
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
 	public String getCompany_id() {
 		return company_id;
 	}

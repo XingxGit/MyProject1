@@ -14,11 +14,13 @@ import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.kpi.KPI;
 import cn.sibat.warn.util.HibSession;
+import cn.sibat.warn.util.HibUtil;
 @SuppressWarnings("unchecked")
 @Service
 public class CaseDao {
 	static Logger log = Logger.getLogger(CaseDao.class);
 	@Autowired HibSession hs;
+	@Autowired HibUtil hu;
 	public void saveCase(CaseUpload cs){
 		Session session = hs.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -46,6 +48,25 @@ public class CaseDao {
 	}
 	
 	
+	public void updateCase(CaseUpload cu){
+		hu.update(cu);
+	}
+	
+	public CaseUpload searchCaseByIds(String company_id, String kpi_ids){
+		Session session = hs.getSessionFactory().openSession();
+		List list = null;
+		if(company_id==null||kpi_ids==null)return null;
+		list = session.createCriteria(CaseUpload.class)
+		.add(Restrictions.eq("company_id", company_id))
+		.add(Restrictions.eq("kpi_ids", kpi_ids))
+		.list();
+		if(list!=null&&list.size()>0)
+			return (CaseUpload) list.get(0);
+		else
+			return null;
+	}
+	
+	
 	public List searchRandomCompany(){
 		Session session = hs.getSessionFactory().openSession();
 		List list = session.createCriteria(CompanyInfo.class)
@@ -54,11 +75,7 @@ public class CaseDao {
 	}
 	
 	public void  saveCompany(CompanyInfo ci){
-		Session session = hs.getSessionFactory().openSession();
-		session.beginTransaction();
-		session.save(ci);
-		session.getTransaction().commit();
-		session.close();
+		hu.save(ci);
 		
 	}
 	

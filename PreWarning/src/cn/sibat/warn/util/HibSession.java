@@ -1,14 +1,11 @@
 package cn.sibat.warn.util;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Repository;
-
-import cn.sibat.warn.model.user.User;
 @Repository
 public class HibSession implements DisposableBean{
 	private SessionFactory sessionFactory = null;
@@ -47,17 +44,7 @@ public class HibSession implements DisposableBean{
 		
 	}
 	
-	public static void main(String[] args) throws Exception {
-		HibSession hs = new HibSession();
-		Session session = hs.getSessionFactory().openSession();
-		session.beginTransaction();
-		User user = new User();
-		user.setId("0409");
-		user.setUser_id("zzz");
-		session.save(user);
-		session.getTransaction().commit();
-		session.close();
-	}
+	
 	@Override
 	public void destroy() throws Exception {
 		this.sessionFactory.close();
