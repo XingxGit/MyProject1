@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Test;
+
 import com.alibaba.fastjson.JSONArray;
 
 import cn.sibat.warn.model.company.CompanyInfo;
@@ -87,7 +89,7 @@ public class JsonConcat {
 	       return  name;
 		        
 		    }
-	 
+	 @Test
 	 public static void main(String[] args) throws Exception {
 		List list1 = new ArrayList<>();
 		CompanyInfo c1  = new CompanyInfo();

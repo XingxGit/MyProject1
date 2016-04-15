@@ -95,7 +95,7 @@ public class JsonBuilder {
 	        
 	    }
 	@Test
-	 void testCase() {
+	public static void main(String[] args) throws Exception {
 		List list = new ArrayList<>();
 		User user = new User();
 		user.setName("zhangxing");
