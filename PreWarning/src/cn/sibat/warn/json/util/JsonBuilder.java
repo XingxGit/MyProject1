@@ -20,27 +20,24 @@ import net.sf.json.JSONObject;
  */
 public class JsonBuilder {
 	Object obj;
-	List list;
 	Map map = new HashMap<>();
 	Logger log = Logger.getLogger(JsonBuilder.class);
 	 JsonBuilder() {
 		super();
 	}
-	public JsonBuilder(Object obj) {
-		super();
-		this.obj = obj;
-	}
-
-	public JsonBuilder(List list) {
-		super();
-		this.list = list;
-	}
-
-
+	
 	public JsonBuilder append(String s1, String s2) {
 		if (s1 != null)
 			map.put(s1, s2);
 		return this;
+	}
+	
+	public String build(Object obj){
+		this.obj = obj;
+		if(obj instanceof List)
+			return buildList().toString();
+		else
+			return buildObject().toString();
 	}
 
 	public JSONObject buildObject() {
@@ -63,6 +60,7 @@ public class JsonBuilder {
 	}
 	
 	public JSONArray buildList(){
+		List list = (List) this.obj;
 		JSONArray array = new JSONArray();
 		for (int i = 0; i < list.size(); i++) {
 			Object aobj = list.get(i);
@@ -94,8 +92,9 @@ public class JsonBuilder {
        return  name;
 	        
 	    }
+	/*
 	@Test
-	public static void main(String[] args) throws Exception {
+	 public static void main(String[] args) throws Exception {
 		List list = new ArrayList<>();
 		User user = new User();
 		user.setName("zhangxing");
@@ -105,12 +104,12 @@ public class JsonBuilder {
 		user2.setName("xingxing");
 		user2.setPassword("456");
 		user2.setRank("buzhang");
-		JsonBuilder jb = new JsonBuilder(user);
-		System.out.println(jb.append("name", null).append("password", "pwd").buildObject());
+		JsonBuilder jb = new JsonBuilder();
+		System.out.println(jb.append("name", null).append("password", "pwd").build(user));
 		list.add(user);
 		list.add(user2);
-		jb = new JsonBuilder(list);
-		System.out.println(jb.append("name", null).append("password", "pwd").append("rank", null).buildList());
+		jb = new JsonBuilder();
+		System.out.println(jb.append("name", null).append("password", "pwd").append("rank", null).build(list));
 	}
-
+*/
 }

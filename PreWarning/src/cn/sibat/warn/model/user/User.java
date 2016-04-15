@@ -17,22 +17,16 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User implements Serializable{
 	private static final long serialVersionUID = 7748773976948579379L;
-	private String id;
 	private String user_id;
 	private String name;
 	private String password;
 	private String agency;
 	private String rank;
 	private String street_name;
+	private Integer prior;
 	
 	
-	@Id
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 	public String getAgency() {
 		return agency;
 	}
@@ -51,7 +45,7 @@ public class User implements Serializable{
 	public void setStreet_name(String street_name) {
 		this.street_name = street_name;
 	}
-
+	@Id
 	public String getUser_id() {
 		return user_id;
 	}
@@ -60,6 +54,12 @@ public class User implements Serializable{
 	}
 	
 	
+	public Integer getPrior() {
+		return prior;
+	}
+	public void setPrior(Integer prior) {
+		this.prior = prior;
+	}
 	public String getName() {
 		return name;
 	}
@@ -72,6 +72,11 @@ public class User implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	@Override
+	public String toString() {
+		return "User [user_id=" + user_id + ", name=" + name + ", password=" + password + ", agency=" + agency
+				+ ", rank=" + rank + ", street_name=" + street_name + ", prior=" + prior + "]";
 	}
 	
 	

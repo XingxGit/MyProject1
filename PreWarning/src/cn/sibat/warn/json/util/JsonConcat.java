@@ -23,7 +23,7 @@ import net.sf.json.JSONObject;
  */
 public class JsonConcat {
 	
-	public JSONArray concatList(List lo, List lt, Object key) {
+	public String concatList(List lo, List lt, Object key) {
 		
 		if(lo==null||lt==null||key==null)
 			return null;
@@ -80,7 +80,7 @@ public class JsonConcat {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return array;
+		return array.toString();
 		
 	}
 	
@@ -111,7 +111,7 @@ public class JsonConcat {
 		
 		String key = "company_id";
 		JsonConcat jc = new JsonConcat();
-		System.out.println(jc.concatList(list1, list2, key).toString());
+		System.out.println(jc.concatList(list1, list2, key));
 		
 		
 	}

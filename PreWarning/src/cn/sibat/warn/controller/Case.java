@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.sibat.warn.model.cases.CaseUpload;
+import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
 import net.sf.json.JSONArray;
@@ -60,11 +61,14 @@ public class Case {
 				caseDao.updateCase(cp);
 				continue;
 			}
-			
 			if(obj.containsKey("agency"))
 				cs.setAgency(obj.getString("agency"));
-			if(obj.containsKey("user_id"))
+			if(obj.containsKey("user_id")){
 				cs.setUser_id(obj.getString("user_id"));
+				User user = auth.findUser(obj.getString("user_id"));
+				if(user!=null)
+					cs.setPrior(user.getPrior());
+			}
 			if(obj.containsKey("value"))
 				cs.setValue(obj.getString("value"));
 			list.add(cs);

@@ -18,6 +18,7 @@ public class CaseUpload implements Serializable{
 	private String remarks;
 	private String agency;
 	private String user_id;
+	private Integer prior;
 	private Date upload_time;
 	private String value;
 	public CaseUpload() {
@@ -52,6 +53,12 @@ public class CaseUpload implements Serializable{
 	}
 	
 	
+	public Integer getPrior() {
+		return prior;
+	}
+	public void setPrior(Integer prior) {
+		this.prior = prior;
+	}
 	public String getValue() {
 		return value;
 	}
