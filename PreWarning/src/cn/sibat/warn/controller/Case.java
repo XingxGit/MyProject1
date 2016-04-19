@@ -1,7 +1,9 @@
 package cn.sibat.warn.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,11 +19,12 @@ import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
+import cn.sibat.warn.service.AlgoExcutorService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-@Scope("session")
+//@Scope("session")
 @RequestMapping("")
 public class Case {
 	@Autowired Auth auth;
@@ -35,31 +38,35 @@ public class Case {
 //			@RequestParam("agency") String agency,
 //			@RequestParam("value") String value,
 //			@RequestParam("user_id") String user_id,
-			@RequestParam("content") String content,
-			HttpSession session
+			@RequestParam("content") String content
+//			HttpSession session
 			){
-		Boolean sign = auth.checkUser(session);
+		Set<String> set = new HashSet<>();
+		/*Boolean sign = auth.checkUser(session);
 		if(sign==false){
 			log.info("not sign in but use upload_case");
 			Xing x = new Xing();
 			x.setSuccess(false);
 			x.setMsg("对不起，请先登录！");
 			return x;
-		}
+		}*/
 		log.info("execution upload_case api");
 		JSONArray array = JSONArray.fromObject(content);
 		List list = new ArrayList<>();
 		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = new JSONObject();
+			JSONObject obj = array.getJSONObject(i);
 			CaseUpload cs = new CaseUpload();
 			if(obj.containsKey("company_id")&&obj.containsKey("kpi_ids")){
+				System.out.println(obj.containsKey("company_id"));
+				set.add(obj.getString("company_id"));
 				cs.setCompany_id(obj.getString("company_id"));
 				cs.setKpi_ids(obj.getString("kpi_ids"));
 				CaseUpload cp = caseDao.searchCaseByIds(obj.getString("company_id"), obj.getString("kpi_ids"));
-				if(cp!=null)
+				if(cp!=null){
 					cp.setValue(obj.containsKey("value")==true?cp.getValue():obj.getString("value"));
 				caseDao.updateCase(cp);
 				continue;
+				}
 			}
 			if(obj.containsKey("agency"))
 				cs.setAgency(obj.getString("agency"));
@@ -73,12 +80,19 @@ public class Case {
 				cs.setValue(obj.getString("value"));
 			list.add(cs);
 		}
+			System.out.println(list.size()+"list size");
 			caseDao.saveListCase(list);
+			System.out.println(set.size()+"set size");
+			AlgoExcutorService algo = AlgoExcutorService.getInstance();
+			for (String s : set) {
+				algo.getBlockQueue().offer(s);
+				System.out.println(algo.getBlockQueue().size());
+			}
+//			System.out.println(aes.getBlockQueue().poll());
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");
 			return x;
-			
 	}
 	
 	@RequestMapping(value="search_case",produces="application/json;charset=UTF-8") 

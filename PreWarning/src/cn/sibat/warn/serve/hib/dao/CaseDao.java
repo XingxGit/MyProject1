@@ -33,17 +33,19 @@ public class CaseDao {
 	public List searchCase(String company_id, String agency){
 		Session session = hs.getSessionFactory().openSession();
 		List list = null;
-		
-		if(agency!=null&&!agency.equals("")){
 		list = session.createCriteria(CaseUpload.class)
 		.add(Restrictions.eq("company_id", company_id))
 		.add(Restrictions.eq("agency", agency))
 		.list();
-		}else{
+		return list;
+	}
+	
+	public List searchCase(String company_id){
+		Session session = hs.getSessionFactory().openSession();
+		List list = null;
 		list = session.createCriteria(CaseUpload.class)
 				.add(Restrictions.eq("company_id", company_id))
 				.list();
-		}
 		return list;
 	}
 	

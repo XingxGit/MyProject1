@@ -92,7 +92,7 @@ public class JsonBuilder {
        return  name;
 	        
 	    }
-	/*
+	
 	@Test
 	 public static void main(String[] args) throws Exception {
 		List list = new ArrayList<>();
@@ -111,5 +111,5 @@ public class JsonBuilder {
 		jb = new JsonBuilder();
 		System.out.println(jb.append("name", null).append("password", "pwd").append("rank", null).build(list));
 	}
-*/
+
 }
