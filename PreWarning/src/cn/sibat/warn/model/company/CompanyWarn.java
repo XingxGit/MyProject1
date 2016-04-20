@@ -11,9 +11,12 @@ import cn.sibat.warn.util.HashUtil;
 public class CompanyWarn {
 	private Date create_time;
 	private String company_id;
-	private Integer score;
+	private Double green_score;
+	private Double blue_score;
+	private Double yellow_score;
+	private Double red_score;
 	private String light_grade;
-	private String kpi_ids;
+	
 	
 	
 	
@@ -36,24 +39,46 @@ public class CompanyWarn {
 		this.company_id = company_id;
 	}
 	
-	public Integer getScore() {
-		return score;
-	}
-	public void setScore(Integer score) {
-		this.score = score;
-	}
+	
 	public String getLight_grade() {
 		return light_grade;
 	}
 	public void setLight_grade(String light_grade) {
 		this.light_grade = light_grade;
 	}
-	public String getKpi_ids() {
-		return kpi_ids;
+
+	public Double getGreen_score() {
+		return green_score;
 	}
-	public void setKpi_ids(String kpi_ids) {
-		this.kpi_ids = kpi_ids;
+
+	public void setGreen_score(Double green_score) {
+		this.green_score = green_score;
 	}
+
+	public Double getBlue_score() {
+		return blue_score;
+	}
+
+	public void setBlue_score(Double blue_score) {
+		this.blue_score = blue_score;
+	}
+
+	public Double getYellow_score() {
+		return yellow_score;
+	}
+
+	public void setYellow_score(Double yellow_score) {
+		this.yellow_score = yellow_score;
+	}
+
+	public Double getRed_score() {
+		return red_score;
+	}
+
+	public void setRed_score(Double red_score) {
+		this.red_score = red_score;
+	}
+	
 	
 	
 

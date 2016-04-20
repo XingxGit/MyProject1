@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,7 @@ import net.sf.json.JSONObject;
 //@Scope("session")
 @RequestMapping("")
 public class Case {
+	@Autowired JdbcTemplate jdbcTemplate;
 	@Autowired Auth auth;
 	@Autowired CaseDao caseDao;
 	Logger log = Logger.getLogger(Case.class);
@@ -63,7 +65,7 @@ public class Case {
 				cs.setKpi_ids(obj.getString("kpi_ids"));
 				CaseUpload cp = caseDao.searchCaseByIds(obj.getString("company_id"), obj.getString("kpi_ids"));
 				if(cp!=null){
-					cp.setValue(obj.containsKey("value")==true?cp.getValue():obj.getString("value"));
+					cp.setValue(obj.containsKey("value")==true?cp.getValue():Double.valueOf(obj.getString("value")));
 				caseDao.updateCase(cp);
 				continue;
 				}
@@ -77,7 +79,7 @@ public class Case {
 					cs.setPrior(user.getPrior());
 			}
 			if(obj.containsKey("value"))
-				cs.setValue(obj.getString("value"));
+				cs.setValue(Double.valueOf(obj.getString("value")));
 			list.add(cs);
 		}
 			System.out.println(list.size()+"list size");
@@ -173,6 +175,19 @@ public class Case {
 		x.setSuccess(true);
 		x.setMsg("ok");
 		x.setData(cwlist);
+		return x;
+	}
+	
+	@RequestMapping(value="jdbc",produces="application/json;charset=UTF-8") 
+	@ResponseBody
+	public Xing searchCompanyInfo(@RequestParam("company_id") String company_id,HttpSession session){
+		
+		log.info("execution light_companyinfo api");
+		List list = jdbcTemplate.queryForList("select * from case_upload where company_id = ?", new Object[]{company_id});
+		System.out.println(list.size()+"-----------");
+		Xing x = new Xing();
+		x.setSuccess(true);
+		x.setMsg("ok");
 		return x;
 	}
 

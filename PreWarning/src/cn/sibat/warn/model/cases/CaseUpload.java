@@ -20,7 +20,7 @@ public class CaseUpload implements Serializable{
 	private String user_id;
 	private Integer prior;
 	private Date upload_time;
-	private String value;
+	private Double value;
 	public CaseUpload() {
 		super();
 		this.id = HashUtil.getRandomId();
@@ -53,18 +53,19 @@ public class CaseUpload implements Serializable{
 	}
 	
 	
+	public Double getValue() {
+		return value;
+	}
+	public void setValue(Double value) {
+		this.value = value;
+	}
 	public Integer getPrior() {
 		return prior;
 	}
 	public void setPrior(Integer prior) {
 		this.prior = prior;
 	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
+	
 	public String getCompany_id() {
 		return company_id;
 	}
