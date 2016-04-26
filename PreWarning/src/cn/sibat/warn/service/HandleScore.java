@@ -1,10 +1,13 @@
 package cn.sibat.warn.service;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,20 +95,34 @@ public class HandleScore {
 			for (Double d : tmap.keySet()) {
 				lightGrade = tmap.get(d);
 			}
+			Date create_time = null;
+			sql = "select * from company_warn where company_id='"+company_id+"'";
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				create_time = rs.getTimestamp(3);
+			}
 			
 			sql = "delete from company_warn where company_id='"+company_id+"'";
 			stmt = conn.prepareStatement(sql);
 			stmt.execute(sql);
 			
-			sql = "insert into company_warn(id,company_id,green_score,blue_score,yellow_score,red_score,light_grade) values(?,?,?,?,?,?,?)";
+			
+			sql = "insert into company_warn(company_id,green_score,blue_score,yellow_score,red_score,light_grade,create_time,modify_time,time) values(?,?,?,?,?,?,?,?,?)";
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, HashUtil.getRandomId());
-			stmt.setString(2, company_id);
-			stmt.setDouble(3, gscore);
-			stmt.setDouble(4, bscore);
-			stmt.setDouble(5, yscore);
-			stmt.setDouble(6, rscore);
-			stmt.setString(7, lightGrade);
+			stmt.setString(1, company_id);
+			stmt.setDouble(2, gscore);
+			stmt.setDouble(3, bscore);
+			stmt.setDouble(4, yscore);
+			stmt.setDouble(5, rscore);
+			stmt.setString(6, lightGrade);
+			if(create_time!=null){
+			stmt.setTimestamp(7, new java.sql.Timestamp(create_time.getTime()));
+			}else{
+			stmt.setTimestamp(7, new java.sql.Timestamp(new Date().getTime()));
+			stmt.setTimestamp(8, new java.sql.Timestamp(new Date().getTime()));
+			}
+			stmt.setString(9, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			stmt.execute();
 			stmt.close();
 			conn.close();

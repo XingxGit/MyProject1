@@ -82,15 +82,11 @@ public class Case {
 				cs.setValue(Double.valueOf(obj.getString("value")));
 			list.add(cs);
 		}
-			System.out.println(list.size()+"list size");
 			caseDao.saveListCase(list);
-			System.out.println(set.size()+"set size");
 			AlgoExcutorService algo = AlgoExcutorService.getInstance();
 			for (String s : set) {
 				algo.getBlockQueue().offer(s);
-				System.out.println(algo.getBlockQueue().size());
 			}
-//			System.out.println(aes.getBlockQueue().poll());
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");

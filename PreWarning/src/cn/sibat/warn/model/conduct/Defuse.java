@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -12,13 +13,14 @@ public class Defuse {
 	private Long id;
 	private Date create_time;
 	private Date defuse_time;
-	private String result;
+	private String status;
 	private String detail;
 	private String agency;
 	private String company_id;
+	private String street_name;
+	private String time;
 	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -37,12 +39,7 @@ public class Defuse {
 	public void setDefuse_time(Date defuse_time) {
 		this.defuse_time = defuse_time;
 	}
-	public String getResult() {
-		return result;
-	}
-	public void setResult(String result) {
-		this.result = result;
-	}
+	
 	public String getDetail() {
 		return detail;
 	}
@@ -60,6 +57,24 @@ public class Defuse {
 	}
 	public void setCompany_id(String company_id) {
 		this.company_id = company_id;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getStreet_name() {
+		return street_name;
+	}
+	public void setStreet_name(String street_name) {
+		this.street_name = street_name;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
 }

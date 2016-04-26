@@ -1,7 +1,5 @@
 package cn.sibat.warn.safecheck;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -18,31 +16,19 @@ public class Auth {
 	@SuppressWarnings("unchecked")
 	public  User findUser(String name, String pwd){
 		Session session = hs.getSessionFactory().openSession();
-		List list = session.createCriteria(User.class)
+		User user = (User) session.createCriteria(User.class)
 		.add(Restrictions.eq("name", name))
 		.add(Restrictions.eq("password", pwd))
-		.list();
-		
-		if(list!=null&&list.size()>0){
-			User user = (User) list.get(0);
-			return user;
-		}else{
-			return null;
-		}
+		.uniqueResult();
+		return user;
 	}
 	
 	public  User findUser(String user_id){
 		Session session = hs.getSessionFactory().openSession();
-		List list = session.createCriteria(User.class)
+		User user = (User) session.createCriteria(User.class)
 		.add(Restrictions.eq("user_id", user_id))
-		.list();
-		
-		if(list!=null&&list.size()>0){
-			User user = (User) list.get(0);
-			return user;
-		}else{
-			return null;
-		}
+		.uniqueResult();
+		return user;
 	}
 	
 	

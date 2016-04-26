@@ -3,6 +3,7 @@ package cn.sibat.warn.safecheck;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +17,15 @@ import cn.sibat.warn.model.user.User;
 @Controller
 @RequestMapping(value="login")
 public class Login {
+		Logger log = Logger.getLogger("API_FILE");
 		@Autowired Auth auth;
-		Logger log = Logger.getLogger(Login.class);
+		
 		//http://localhost:8080/PreWarning/api/login/user?name=admin&password=admin
 		@RequestMapping(value="user",produces="application/json;charset=UTF-8") 
 		@ResponseBody
 		public Xing getInfo(@RequestParam("name") String name,@RequestParam("password") String password,HttpSession session){
-			log.info("execution login api");
+			
+			log.warn("execution login api");
 			User user = auth.findUser(name, password);
 			if(user!=null){
 			session.setAttribute("userInfo", user);

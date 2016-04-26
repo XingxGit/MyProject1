@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.springframework.stereotype.Component;
 
 import cn.sibat.warn.model.user.User;
 import net.sf.json.JSONArray;
@@ -18,6 +19,7 @@ import net.sf.json.JSONObject;
  *	本工具类可以将任意给定model按照指定的字段输出成json
  *	版权所有，禁止非授权修改
  */
+@Component
 public class JsonBuilder {
 	Object obj;
 	Map map = new HashMap<>();
@@ -40,7 +42,7 @@ public class JsonBuilder {
 			return buildObject().toString();
 	}
 
-	public JSONObject buildObject() {
+	private JSONObject buildObject() {
 		JSONObject jobj = new JSONObject();
 		for (Object okey : map.keySet()) {
 			Object tkey = map.get(okey);
@@ -59,7 +61,7 @@ public class JsonBuilder {
 		return jobj;
 	}
 	
-	public JSONArray buildList(){
+	private JSONArray buildList(){
 		List list = (List) this.obj;
 		JSONArray array = new JSONArray();
 		for (int i = 0; i < list.size(); i++) {
@@ -87,7 +89,7 @@ public class JsonBuilder {
 	
 	
 	
-	public static String captureName(String name) {
+	private static String captureName(String name) {
 	 	name = name.substring(0, 1).toUpperCase() + name.substring(1);
        return  name;
 	        

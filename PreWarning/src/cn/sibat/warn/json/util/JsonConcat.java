@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
 
@@ -21,9 +22,10 @@ import net.sf.json.JSONObject;
  * 该程序可以将两个list根据指定的key合成一个jsonarray
  * 版权所有，禁止非授权修改
  */
+@Component
 public class JsonConcat {
 	
-	public String concatList(List lo, List lt, Object key) {
+	public  String concatList(List lo, List lt, Object key) {
 		
 		if(lo==null||lt==null||key==null)
 			return null;
@@ -84,7 +86,7 @@ public class JsonConcat {
 		
 	}
 	
-	 public static String captureName(String name) {
+	 private static String captureName(String name) {
 		 	name = name.substring(0, 1).toUpperCase() + name.substring(1);
 	       return  name;
 		        
