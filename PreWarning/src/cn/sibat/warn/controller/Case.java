@@ -1,6 +1,7 @@
 package cn.sibat.warn.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,30 +17,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
+import cn.sibat.warn.serve.hib.dao.ProcessDao;
 import cn.sibat.warn.service.AlgoExcutorService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-//@Scope("session")
+@Scope("session")
 @RequestMapping("")
 public class Case {
 	@Autowired JdbcTemplate jdbcTemplate;
 	@Autowired Auth auth;
 	@Autowired CaseDao caseDao;
+	@Autowired ProcessDao processDao;
 	Logger log = Logger.getLogger(Case.class);
 	@RequestMapping(value="upload_case",produces="application/json;charset=UTF-8") 
 	@ResponseBody
 	public Xing uploadCase(
-//			@RequestParam("company_id") String company_id,
-//			@RequestParam("kpi_ids") String kpi_ids,
-//			@RequestParam("agency") String agency,
-//			@RequestParam("value") String value,
-//			@RequestParam("user_id") String user_id,
 			@RequestParam("content") String content
 //			HttpSession session
 			){
@@ -87,6 +86,13 @@ public class Case {
 			for (String s : set) {
 				algo.getBlockQueue().offer(s);
 			}
+			for (String s : set) {
+				if(processDao.searchCaseInspection(s)==null){
+					CasePending cp = new CasePending();
+					cp.setCompany_id(s);
+					processDao.savePendingCase(cp);
+				}
+			}
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");
@@ -110,6 +116,9 @@ public class Case {
 		log.info("execution upload_case api");
 		
 		List list = caseDao.searchCase(company_id, agency);
+		for (int i = 0; i < list.size(); i++) {
+			
+		}
 		Xing x = new Xing();
 		x.setSuccess(true);
 		x.setMsg("ok");

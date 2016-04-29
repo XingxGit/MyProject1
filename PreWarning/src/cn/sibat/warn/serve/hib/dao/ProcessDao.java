@@ -14,12 +14,17 @@ import com.alibaba.fastjson.JSONArray;
 
 import cn.sibat.warn.json.util.JsonBuilder;
 import cn.sibat.warn.json.util.JsonConcat;
+import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.company.CompanyWarn;
+import cn.sibat.warn.model.conduct.CaseInspection;
 import cn.sibat.warn.model.conduct.Conclusion;
 import cn.sibat.warn.model.conduct.Defuse;
 import cn.sibat.warn.model.conduct.Inspection;
+import cn.sibat.warn.model.pending.InspectPending;
+import cn.sibat.warn.model.pending.LightPending;
 import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import cn.sibat.warn.util.HibSession;
+import cn.sibat.warn.util.HibUtil;
 import net.sf.json.JSONObject;
 
 @Service
@@ -28,6 +33,7 @@ public class ProcessDao {
 	@Autowired JsonConcat jsonConcat;
 	@Autowired JsonBuilder jsonBuilder;
 	@Autowired CompanyInfoDao companyInfoDao;
+	@Autowired HibUtil hu;
 	@SuppressWarnings("unchecked")
 	public JSONObject getDufuseChart(String time,String status){
 	Session session = hs.getSessionFactory().openSession();
@@ -137,6 +143,34 @@ public class ProcessDao {
 		Conclusion c = (Conclusion) session.createCriteria(Conclusion.class)
 				.add(Restrictions.eq("company_id", company_id))
 				.uniqueResult();
+		return c;
+	}
+	
+	public void savePendingCase(CasePending cp){
+		hu.save(cp);
+	}
+	
+	public CaseInspection searchCaseInspection(String company_id){
+		Session session = hs.getSessionFactory().openSession();
+		CaseInspection c = (CaseInspection) session.createCriteria(CaseInspection.class)
+				.add(Restrictions.eq("company_id", company_id))
+				.uniqueResult();
+		return c;
+	}
+	
+	public List searchLightPending(String user_id){
+		Session session = hs.getSessionFactory().openSession();
+		List c =  session.createCriteria(LightPending.class)
+				.add(Restrictions.eq("user_id", user_id))
+				.list();
+		return c;
+	}
+	
+	public List searchInspectPending(String user_id){
+		Session session = hs.getSessionFactory().openSession();
+		List c =  session.createCriteria(InspectPending.class)
+				.add(Restrictions.eq("user_id", user_id))
+				.list();
 		return c;
 	}
 }

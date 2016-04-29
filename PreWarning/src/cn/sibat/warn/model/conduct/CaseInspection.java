@@ -8,16 +8,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.GenericGenerator;
-@Entity( name = "conclusion")
-public class Conclusion {
+@Entity( name = "case_inspection")
+public class CaseInspection {
+	
 	private Long id;
 	private Date create_time;
-	private Date conclusion_time;
+	private Date inspection_time;
+	private String agency;
 	private String company_id;
 	private String result;
 	private String detail;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	public Long getId() {
 		return id;
 	}
@@ -27,15 +31,20 @@ public class Conclusion {
 	public Date getCreate_time() {
 		return create_time;
 	}
-	
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-	public Date getConclusion_time() {
-		return conclusion_time;
+	public Date getInspection_time() {
+		return inspection_time;
 	}
-	public void setConclusion_time(Date conclusion_time) {
-		this.conclusion_time = conclusion_time;
+	public void setInspection_time(Date inspection_time) {
+		this.inspection_time = inspection_time;
+	}
+	public String getAgency() {
+		return agency;
+	}
+	public void setAgency(String agency) {
+		this.agency = agency;
 	}
 	public String getCompany_id() {
 		return company_id;
