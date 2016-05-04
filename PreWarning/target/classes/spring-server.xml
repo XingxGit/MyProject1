@@ -23,22 +23,6 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"></bean>
 
-<!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> -->
-<!-- 		<property name="messageConverters"> -->
-			
-<!-- 				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"> -->
-<!-- 					<property name="supportedMediaTypes"> -->
-<!-- 						<list> -->
-<!-- 							<value>text/html;charset=UTF-8</value> -->
-<!-- 							<value>text/json;charset=utf-8</value> -->
-<!-- 							<value>text/plain;charset=utf-8</value> -->
-<!-- 							<value>application/json;charset=utf-8</value> -->
-<!-- 						</list> -->
-<!-- 					</property> -->
-<!-- 				</bean> -->
-			
-<!-- 		</property> -->
-<!-- 	</bean> -->
 
 	<bean id="springDSN"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -59,5 +43,47 @@
             <ref bean="springDSN" />
         </property>
     </bean>
+    
+    
+    
+   
+        <bean id="quartzJob" class="cn.sibat.warn.overtimecheck.DelayCheck"></bean>
+        <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <property name="targetMethod">
+                <value>work</value>
+            </property>
+    </bean>
+    
+    
+    
+    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+            <property name="jobDetail">
+                <ref bean="jobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>1 0 * * * ?</value>
+            </property>
+        </bean>
+        <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+        <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+            <property name="triggers">
+                <list>
+                    <ref bean="doTime"/>
+                </list>
+            </property>
+        </bean>
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 </beans>

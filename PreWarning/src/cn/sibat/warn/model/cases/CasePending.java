@@ -3,26 +3,23 @@ package cn.sibat.warn.model.cases;
 import java.io.Serializable;
 import java.util.Date;
 
-import cn.sibat.warn.util.HashUtil;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+import cn.sibat.warn.util.HashUtil;
+@Entity( name = "case_pending")
 public class CasePending implements Serializable{
 	private static final long serialVersionUID = -4137105504380076226L;
-	private String id;
 	private String company_id;
 	private String user_id;
 	private String duty_id;
 	private Date create_time;
+	private String status;
 	public CasePending() {
 		super();
-		this.id = HashUtil.getRandomId();
 		this.create_time = new Date();
 	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	@Id
 	public String getCompany_id() {
 		return company_id;
 	}
@@ -46,6 +43,12 @@ public class CasePending implements Serializable{
 	}
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

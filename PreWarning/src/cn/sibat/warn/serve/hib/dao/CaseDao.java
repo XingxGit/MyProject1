@@ -22,11 +22,7 @@ public class CaseDao {
 	@Autowired HibSession hs;
 	@Autowired HibUtil hu;
 	public void saveCase(CaseUpload cs){
-		Session session = hs.getSessionFactory().openSession();
-		session.beginTransaction();
-		session.save(cs);
-		session.getTransaction().commit();
-		session.close();
+		hu.save(cs);
 	}
 	
 	

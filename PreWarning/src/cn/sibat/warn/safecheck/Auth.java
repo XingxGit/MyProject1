@@ -1,10 +1,15 @@
 package cn.sibat.warn.safecheck;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +21,14 @@ public class Auth {
 	@SuppressWarnings("unchecked")
 	public  User findUser(String name, String pwd){
 		Session session = hs.getSessionFactory().openSession();
-		User user = (User) session.createCriteria(User.class)
+		ProjectionList proList = Projections.projectionList();
+        proList.add(Projections.alias(Projections.groupProperty("user_id"), "user_id"));
+        proList.add(Projections.alias(Projections.groupProperty("rank"), "rank"));
+        User user  =  (User) session.createCriteria(User.class)
 		.add(Restrictions.eq("name", name))
 		.add(Restrictions.eq("password", pwd))
+		.setProjection(proList)
+		.setResultTransformer(Transformers.aliasToBean(User.class)) 
 		.uniqueResult();
 		return user;
 	}

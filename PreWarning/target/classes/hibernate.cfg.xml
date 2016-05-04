@@ -6,11 +6,25 @@
 
 	<session-factory>
 		<mapping class="cn.sibat.warn.model.user.User" />
+		
 		<mapping class="cn.sibat.warn.model.cases.CaseUpload" />
+		<mapping class="cn.sibat.warn.model.cases.CaseOverTime" />
+		<mapping class="cn.sibat.warn.model.cases.CasePending" />
+		
 		<mapping class="cn.sibat.warn.model.company.CompanyInfo"/>
 		<mapping class="cn.sibat.warn.model.company.CompanyWarn" />
+		
+		<mapping class="cn.sibat.warn.model.conduct.CaseInspection" />
+		<mapping class="cn.sibat.warn.model.conduct.Conclusion" />
+		<mapping class="cn.sibat.warn.model.conduct.Defuse" />
+		<mapping class="cn.sibat.warn.model.conduct.Inspection" />
+		
 		<mapping class="cn.sibat.warn.model.kpi.KPI" />
 		<mapping class="cn.sibat.warn.model.kpi.KPILightScore" />
+		
+		<mapping class="cn.sibat.warn.model.pending.InspectPending" />
+		<mapping class="cn.sibat.warn.model.pending.LightPending" />
+		
 	</session-factory>
 
 </hibernate-configuration>

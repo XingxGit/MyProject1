@@ -1,21 +1,19 @@
-package cn.sibat.warn.model.pending;
+package cn.sibat.warn.model.cases;
 
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import cn.sibat.warn.util.HashUtil;
-@Entity( name = "light_pending")
-public class LightPending {
+@Entity( name = "case_overtime")
+public class CaseOverTime {
 	private String company_id;
 	private String user_id;
-	private String light_grade;
+	private String duty_id;
+	private String overtime_type;
 	private Date create_time;
-	private String reform_type;
-	public LightPending() {
+	public CaseOverTime() {
 		super();
-		this.reform_type = "亮灯";
+		this.create_time = new Date();
 	}
 	@Id
 	public String getCompany_id() {
@@ -30,11 +28,11 @@ public class LightPending {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
-	public String getLight_grade() {
-		return light_grade;
+	public String getDuty_id() {
+		return duty_id;
 	}
-	public void setLight_grade(String light_grade) {
-		this.light_grade = light_grade;
+	public void setDuty_id(String duty_id) {
+		this.duty_id = duty_id;
 	}
 	public Date getCreate_time() {
 		return create_time;
@@ -42,13 +40,12 @@ public class LightPending {
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-	public String getReform_type() {
-		return reform_type;
+	public String getOvertime_type() {
+		return overtime_type;
 	}
-	public void setReform_type(String reform_type) {
-		this.reform_type = reform_type;
+	public void setOvertime_type(String overtime_type) {
+		this.overtime_type = overtime_type;
 	}
-	
 	
 	
 }

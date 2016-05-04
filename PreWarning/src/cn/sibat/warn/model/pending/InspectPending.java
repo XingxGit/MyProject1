@@ -2,10 +2,11 @@ package cn.sibat.warn.model.pending;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import cn.sibat.warn.util.HashUtil;
-
+@Entity( name = "inspect_pending")
 public class InspectPending {
 	private String id;
 	private String company_id;
