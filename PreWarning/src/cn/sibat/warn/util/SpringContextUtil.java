@@ -1,5 +1,9 @@
 package cn.sibat.warn.util;
 
+import javax.annotation.PreDestroy;
+
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -33,5 +37,16 @@ public class SpringContextUtil implements ApplicationContextAware {
           public static <T> T getBean(String name) throws BeansException {
                      return (T) applicationContext.getBean(name);
            }
+          
+//      	@PreDestroy
+//      	public void preDestroy()  {  
+//      		System.out.println("trying to destroy scheduler!");
+//      		Scheduler scheduler = (Scheduler) SpringContextUtil.getBean("startQuertz");
+//      		try {
+//      			scheduler.shutdown();
+//      		} catch (SchedulerException e) {
+//      			e.printStackTrace();
+//      		}
+//          }  
 
 }

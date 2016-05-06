@@ -65,16 +65,17 @@
             </property>
             <!-- cron表达式 -->
             <property name="cronExpression">
-                <value>1 0 * * * ?</value>
+                <value>5,10,15,20,25,30,35,40,45,50,55 * * * * ?</value>
             </property>
         </bean>
         <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
-        <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <bean id="startQuertz" name="startQuertz" lazy-init="false"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean" destroy-method="destroy">
             <property name="triggers">
                 <list>
                     <ref bean="doTime"/>
                 </list>
             </property>
+           <property name="quartzProperties" value="classpath*:quartz.properties" /> 
         </bean>
     
     

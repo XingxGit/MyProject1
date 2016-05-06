@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import cn.sibat.warn.util.HashUtil;
 @Entity( name = "inspect_pending")
 public class InspectPending {
-	private String id;
 	private String company_id;
 	private String user_id;
 	private String light_grade;
@@ -17,17 +16,10 @@ public class InspectPending {
 	private String reform_type;
 	public InspectPending() {
 		super();
-		this.id = HashUtil.getRandomId();
 		this.create_time = new Date();
 		this.reform_type = "巡查";
 	}
 	@Id
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getCompany_id() {
 		return company_id;
 	}

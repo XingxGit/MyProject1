@@ -3,23 +3,30 @@ package cn.sibat.warn.overtimecheck;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import cn.sibat.warn.model.cases.CaseOverTime;
 import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.company.CompanyWarn;
+import cn.sibat.warn.model.pending.InspectPending;
 import cn.sibat.warn.model.pending.LightPending;
 import cn.sibat.warn.util.GetWorkingDay;
 import cn.sibat.warn.util.HibSession;
 import cn.sibat.warn.util.HibUtil;
-
+import cn.sibat.warn.util.SpringContextUtil;
+@Component
 public class DelayCheck {
 	@Autowired HibSession hs;
 	@Autowired HibUtil hu;
 	public void work(){
-		System.out.println("begin to work!!!");
+//		System.out.println("begin to work!!!");
 		Session session = hs.getSessionFactory().openSession();
 		List<CompanyWarn> list = session.createCriteria(CompanyWarn.class).list();
 		for (CompanyWarn cw : list) {
@@ -65,11 +72,36 @@ public class DelayCheck {
 				}
 			}
 			
+			InspectPending ip = (InspectPending) session.createCriteria(InspectPending.class)
+					.add(Restrictions.eq("company_id", s))
+					.uniqueResult();
+			
+			if(ip!=null){
+				CasePending cp = (CasePending) session.createCriteria(CasePending.class)
+						.add(Restrictions.eq("company_id", s))
+						.uniqueResult();
+				if(cp!=null&&cp.getStatus().equals("uncheck")){
+					int delay = GetWorkingDay.getWorkdayTime(cp.getCreate_time().getTime(), new Date().getTime())-1;
+					if(delay>15){
+						CaseOverTime cot = new CaseOverTime();
+						cot.setCompany_id(s);
+						cot.setOvertime_type("巡查");
+//						cot.setUser_id(user_id);//未设置用户id和责任人id
+						hu.save(cot);
+					}
+				}
+			}
 			
 		}
 		
-		
-		
-		
 	}
+	
+	
+	
+	@PreDestroy
+	public void destroy() throws InterruptedException{
+		Thread.sleep(1000);
+	}
+	
+	
 }

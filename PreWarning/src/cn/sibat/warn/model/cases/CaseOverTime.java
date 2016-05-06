@@ -10,6 +10,8 @@ public class CaseOverTime {
 	private String user_id;
 	private String duty_id;
 	private String overtime_type;
+	private String light_grade;
+	private String street_name;
 	private Date create_time;
 	public CaseOverTime() {
 		super();
@@ -45,6 +47,18 @@ public class CaseOverTime {
 	}
 	public void setOvertime_type(String overtime_type) {
 		this.overtime_type = overtime_type;
+	}
+	public String getLight_grade() {
+		return light_grade;
+	}
+	public void setLight_grade(String light_grade) {
+		this.light_grade = light_grade;
+	}
+	public String getStreet_name() {
+		return street_name;
+	}
+	public void setStreet_name(String street_name) {
+		this.street_name = street_name;
 	}
 	
 	

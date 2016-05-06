@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 
+import cn.sibat.warn.model.cases.CaseOverTime;
 import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.pending.InspectPending;
 import cn.sibat.warn.model.pending.LightPending;
@@ -22,7 +25,10 @@ import net.sf.json.JSONObject;
 public class Bulletin {
 	@Autowired ProcessDao processDao;
 	@Autowired CompanyInfoDao companyInfoDao;
-	public Xing reform(String user_id){
+	
+	@ResponseBody
+	@RequestMapping(value="reform",produces="application/json;charset=UTF-8") 
+	public Xing reform(@RequestParam("user_id")String user_id){
 		List<LightPending> list = processDao.searchLightPending(user_id);
 		JSONArray array = new JSONArray();
 		for (LightPending lp : list) {
@@ -53,4 +59,36 @@ public class Bulletin {
 		x.setData(array);
 		return x;
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value="notice",produces="application/json;charset=UTF-8") 
+	public Xing notice(@RequestParam("street_name")String street_name){
+		List<CaseOverTime> list = processDao.searchOverTimeCase(street_name);
+		int red = 0;
+		int yellow = 0;
+		int blue = 0;
+		int green = 0;
+		for (CaseOverTime ct : list) {
+			switch(ct.getLight_grade()){
+			case "red":red++;break;
+			case "yellow":yellow++;break;
+			case "blue":blue++;break;
+			case "green":green++;break;
+			}
+		}
+		
+		JSONObject obj = new JSONObject();
+		obj.put("red_timeout", red);
+		obj.put("yellow_timeout", yellow);
+		obj.put("blue_timeout", blue);
+		obj.put("green_timeout", green);
+		
+		Xing x = new Xing();
+		x.setSuccess(true);
+		x.setMsg("ok");
+		x.setData(obj);
+		return x;
+	}
+	
 }

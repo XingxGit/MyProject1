@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONArray;
 
 import cn.sibat.warn.json.util.JsonBuilder;
 import cn.sibat.warn.json.util.JsonConcat;
+import cn.sibat.warn.model.cases.CaseOverTime;
 import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.conduct.CaseInspection;
@@ -170,6 +171,14 @@ public class ProcessDao {
 		Session session = hs.getSessionFactory().openSession();
 		List c =  session.createCriteria(InspectPending.class)
 				.add(Restrictions.eq("user_id", user_id))
+				.list();
+		return c;
+	}
+	
+	public List searchOverTimeCase(String street_name){
+		Session session = hs.getSessionFactory().openSession();
+		List c =  session.createCriteria(CaseOverTime.class)
+				.add(Restrictions.eq("street_name", street_name))
 				.list();
 		return c;
 	}
