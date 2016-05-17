@@ -1,5 +1,6 @@
 package cn.sibat.warn.serve.hib.dao;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -13,6 +14,7 @@ import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.kpi.KPI;
+import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import cn.sibat.warn.util.HibSession;
 import cn.sibat.warn.util.HibUtil;
 @SuppressWarnings("unchecked")
@@ -21,6 +23,7 @@ public class CaseDao {
 	static Logger log = Logger.getLogger(CaseDao.class);
 	@Autowired HibSession hs;
 	@Autowired HibUtil hu;
+	@Autowired CompanyInfoDao cid;
 	public void saveCase(CaseUpload cs){
 		hu.save(cs);
 	}
@@ -69,9 +72,11 @@ public class CaseDao {
 	
 	
 	public List searchRandomCompany(){
-		Session session = hs.getSessionFactory().openSession();
-		List list = session.createCriteria(CompanyInfo.class)
-				.list();
+		List list = null;
+		try {
+			list = cid.listCompanyInfo();
+		} catch (ParseException e) {
+		}
 		return list;
 	}
 	
@@ -83,11 +88,11 @@ public class CaseDao {
 	public List searchCompany(String input){
 		if(input==null||"".equals(input))
 			return null;
-		Session session = hs.getSessionFactory().openSession();
-		List list = session.createCriteria(CompanyInfo.class)
-				.add(Restrictions.or(Restrictions.like("company_id", input,MatchMode.ANYWHERE), Restrictions.like("company_name", input,MatchMode.ANYWHERE)))
-				.list();
-		
+		List list = null;
+		try {
+			list = cid.getCompanyInfo(input);
+		} catch (ParseException e) {
+		}
 		return list;
 	}
 	

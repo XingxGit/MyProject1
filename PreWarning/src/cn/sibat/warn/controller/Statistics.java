@@ -15,7 +15,7 @@ import cn.sibat.warn.serve.hib.dao.StatisticsDao;
 import net.sf.json.JSONObject;
 
 @Controller
-@Scope("session")
+//@Scope("session")
 @RequestMapping("")
 public class Statistics {
 	Logger log = Logger.getLogger(Statistics.class);

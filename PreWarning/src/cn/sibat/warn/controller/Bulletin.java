@@ -1,5 +1,6 @@
 package cn.sibat.warn.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import net.sf.json.JSONObject;
 
 @Controller
-@Scope("session")
+//@Scope("session")
 @RequestMapping("")
 public class Bulletin {
 	@Autowired ProcessDao processDao;
@@ -28,14 +29,14 @@ public class Bulletin {
 	
 	@ResponseBody
 	@RequestMapping(value="reform",produces="application/json;charset=UTF-8") 
-	public Xing reform(@RequestParam("user_id")String user_id){
+	public Xing reform(@RequestParam("user_id")String user_id) throws ParseException{
 		List<LightPending> list = processDao.searchLightPending(user_id);
 		JSONArray array = new JSONArray();
 		for (LightPending lp : list) {
 			JSONObject obj = new JSONObject();
 			obj.put("reform_type", lp.getReform_type());
 			obj.put("company_id", lp.getCompany_id());
-			CompanyInfo ci = companyInfoDao.getCompanyInfo(lp.getCompany_id());
+			CompanyInfo ci = (CompanyInfo) companyInfoDao.getCompanyInfo(lp.getCompany_id()).get(0);
 			obj.put("company_name", ci.getCompany_name());
 			obj.put("company_address", ci.getCompany_address());
 			array.add(obj);
@@ -46,7 +47,7 @@ public class Bulletin {
 			JSONObject obj = new JSONObject();
 			obj.put("reform_type", lp.getReform_type());
 			obj.put("company_id", lp.getCompany_id());
-			CompanyInfo ci = companyInfoDao.getCompanyInfo(lp.getCompany_id());
+			CompanyInfo ci = (CompanyInfo) companyInfoDao.getCompanyInfo(lp.getCompany_id()).get(0);
 			obj.put("company_name", ci.getCompany_name());
 			obj.put("company_address", ci.getCompany_address());
 			array.add(obj);

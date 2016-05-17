@@ -17,7 +17,7 @@ import cn.sibat.warn.serve.hib.dao.ProcessDao;
 import net.sf.json.JSONObject;
 
 @Controller
-@Scope("session")
+//@Scope("session")
 @RequestMapping("")
 public class Process {
 	@Autowired ProcessDao processDao;

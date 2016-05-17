@@ -23,6 +23,9 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"></bean>
 
+<!-- 	<bean id="multipartResolver" -->
+<!--           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">        -->
+<!--     </bean> -->
 
 	<bean id="springDSN"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">

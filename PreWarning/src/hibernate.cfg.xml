@@ -13,6 +13,7 @@
 		
 		<mapping class="cn.sibat.warn.model.company.CompanyInfo"/>
 		<mapping class="cn.sibat.warn.model.company.CompanyWarn" />
+		<mapping class="cn.sibat.warn.model.company.CompanyKey"/>
 		
 		<mapping class="cn.sibat.warn.model.conduct.CaseInspection" />
 		<mapping class="cn.sibat.warn.model.conduct.Conclusion" />

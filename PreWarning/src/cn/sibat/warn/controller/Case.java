@@ -1,7 +1,6 @@
 package cn.sibat.warn.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +26,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-@Scope("session")
+//@Scope("session")
 @RequestMapping("")
 public class Case {
 	@Autowired JdbcTemplate jdbcTemplate;
@@ -39,7 +37,7 @@ public class Case {
 	@RequestMapping(value="upload_case",produces="application/json;charset=UTF-8") 
 	@ResponseBody
 	public Xing uploadCase(
-			@RequestParam("content") String content
+			String content
 //			HttpSession session
 			){
 		Set<String> set = new HashSet<>();
@@ -145,14 +143,6 @@ public class Case {
 	@RequestMapping(value="search_company",produces="application/json;charset=UTF-8") 
 	@ResponseBody
 	public Xing searchCompany(@RequestParam("input") String input,HttpSession session){
-		Boolean sign = auth.checkUser(session);
-		if(sign==false){
-			log.info("not sign in but use search_company");
-			Xing x = new Xing();
-			x.setSuccess(false);
-			x.setMsg("对不起，请先登录！");
-			return x;
-		}
 		log.info("execution search_company api");
 		log.info("input is "+input);
 		List list = caseDao.searchCompany(input);
