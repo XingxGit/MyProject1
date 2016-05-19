@@ -42,7 +42,7 @@ public class ConnectionListener implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		timer = new Timer(); 	
-	    timer.schedule(AlgoExcutorService.getInstance(), 0,10 * 1000);
+	    timer.schedule(AlgoExcutorService.getInstance(), 0,1 * 1000);
 	}
 }
 

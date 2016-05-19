@@ -30,10 +30,12 @@ public class Score {
 		for (CaseUpload cu : list) {
 			sb.append(cu.getKpi_ids()).append("；");
 		}
+		JSONObject obj = new JSONObject();
+		obj.put("kpi_ids", sb.toString());
 		Xing x = new Xing();
 		x.setSuccess(true);
 		x.setMsg("ok");
-		x.setData(new JSONObject().put("kpi_ids", sb.toString()));
+		x.setData(obj);
 		return x;
 	}
 	
@@ -46,6 +48,7 @@ public class Score {
 		for (CaseUpload cu : list) {
 			JSONObject obj = new JSONObject();
 			obj.put("agency", cu.getAgency());
+			if(auth.findUser(cu.getUser_id())!=null)
 			obj.put("user_name", auth.findUser(cu.getUser_id()).getName());
 			obj.put("upload_time", cu.getUpload_time());
 			array.add(obj);

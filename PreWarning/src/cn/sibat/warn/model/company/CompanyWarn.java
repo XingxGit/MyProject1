@@ -18,8 +18,9 @@ public class CompanyWarn {
 	private String light_grade;
 	private String time;
 	private String street_name;
-	
-	
+	private String company_name;
+	private String company_address;
+	private String industry_name;
 	
 	
 	public CompanyWarn() {
@@ -104,6 +105,31 @@ public class CompanyWarn {
 	public void setStreet_name(String street_name) {
 		this.street_name = street_name;
 	}
+
+	public String getCompany_name() {
+		return company_name;
+	}
+
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
+	}
+
+	public String getCompany_address() {
+		return company_address;
+	}
+
+	public void setCompany_address(String company_address) {
+		this.company_address = company_address;
+	}
+
+	public String getIndustry_name() {
+		return industry_name;
+	}
+
+	public void setIndustry_name(String industry_name) {
+		this.industry_name = industry_name;
+	}
+
 	
 	
 	

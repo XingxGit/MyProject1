@@ -1,6 +1,7 @@
 package cn.sibat.warn.serve.hib.dao;
 
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,6 +27,21 @@ public class CaseDao {
 	@Autowired CompanyInfoDao cid;
 	public void saveCase(CaseUpload cs){
 		hu.save(cs);
+	}
+	
+	public void deleteCase(String company_id,String agency){
+		Session session = hs.getSessionFactory().openSession();
+		session.beginTransaction();
+		List list = session.createCriteria(CaseUpload.class)
+				.add(Restrictions.eq("company_id", company_id))
+				.add(Restrictions.eq("agency", agency))
+				.list();
+		Iterator iter = list.iterator();
+		while( iter.hasNext() ){
+			session.delete( iter.next() );
+		}
+		session.getTransaction().commit();
+		session.close();
 	}
 	
 	

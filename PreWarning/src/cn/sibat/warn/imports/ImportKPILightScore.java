@@ -41,7 +41,7 @@ public class ImportKPILightScore {
 		        	  KPILightScore ks = new KPILightScore();
 		        	  ks.setFirst_kpi(s[0]);
 		        	  ks.setSecond_kpi(s[1]);
-		        	  ks.setThird_kpi(s[2]);
+		        	  ks.setThird_kpi(s[1]+s[2]);
 		        	  ks.setGreen_score(Double.valueOf(s[4]));
 		        	  ks.setBlue_score(Double.valueOf(s[5]));
 		        	  ks.setYellow_score(Double.valueOf(s[6]));

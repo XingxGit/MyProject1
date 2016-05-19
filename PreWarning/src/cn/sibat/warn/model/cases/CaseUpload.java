@@ -21,6 +21,7 @@ public class CaseUpload implements Serializable{
 	private Integer prior;
 	private Date upload_time;
 	private Double value;
+	private String source;
 	public CaseUpload() {
 		super();
 		this.id = HashUtil.getRandomId();
@@ -90,6 +91,12 @@ public class CaseUpload implements Serializable{
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
 	}
 	
 	

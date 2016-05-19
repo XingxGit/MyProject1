@@ -15,9 +15,12 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationRegistryBasedSynchronizationStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.company.CompanyKey;
@@ -34,10 +37,18 @@ public class CompanyInfoDao {
 	@Autowired JdbcTemplate jdbcTemplate;
 	@Autowired HibSession hs;
 	@Autowired HibUtil hu;
-//	public CompanyInfo getCompanyInfo(String company_id){
-//		CompanyInfo ci = new CompanyInfo();
-//		return ci;
-//	}
+	
+	
+	public CompanyInfo searchCompanyInfo(String company_id){
+		Session session = hs.getSessionFactory().openSession();
+		CompanyInfo ci = (CompanyInfo) session.createCriteria(CompanyInfo.class).add(Restrictions.eq("company_id", company_id)).uniqueResult();
+		return ci;
+	}
+	
+	public void saveCompanyInfo(CompanyInfo ci){
+		hu.save(ci);
+		
+	}
 	
 	public List getCompanyInfo(List  list){
 		List infoList = new ArrayList<>();
@@ -48,7 +59,8 @@ public class CompanyInfoDao {
 	public String getCompanyKey(){
 		
 		Session session = hs.getSessionFactory().openSession();
-//		Session session = HibSession.getInstance().getSessionFactory().openSession();
+//		 HibSession hb = HibSession.getInstance();
+//		  Session session = hb.getSessionFactory().openSession();
 		CompanyKey ck = (CompanyKey) session.createCriteria(CompanyKey.class).uniqueResult();
 //		CompanyKey ck = new CompanyKey();
 //		CompanyKey ck = null;
@@ -91,6 +103,7 @@ public class CompanyInfoDao {
 	
 	public List listCompanyInfo() throws ParseException{
 		Session session = hs.getSessionFactory().openSession();
+//		Session session = HibSession.getInstance().getSessionFactory().openSession();
 		List cinfoList = session.createCriteria(CompanyInfo.class).list();
 		if(cinfoList!=null&&cinfoList.size()>0)
 			return cinfoList;
@@ -132,6 +145,8 @@ public class CompanyInfoDao {
 				ci.setCompany_id(object.getString("zzjgdm"));
 				ci.setCompany_name(object.getString("qymc"));
 				ci.setCompany_address(object.getString("jycs"));
+				ci.setStreet_name(this.getStreet(object.getString("jycs")));
+				ci.setIndustry_name(object.getString("ssztlxmc"));
 				session.clear();
 				List list = session.createCriteria(CompanyWarn.class)
 				.add(Restrictions.eq("company_id", object.getString("zzjgdm"))).list();
@@ -141,6 +156,10 @@ public class CompanyInfoDao {
 				ci.setIs_case("false");
 				clist.add(ci);
 			}
+			session.clear();
+			List oldList = session.createCriteria(CompanyInfo.class).list();
+			session.close();
+			hu.batchDelete(oldList);
 			hu.batchSave(clist);
 			return clist;
 		}
@@ -156,6 +175,8 @@ public class CompanyInfoDao {
 			ci.setCompany_id(object.getString("zzjgdm"));
 			ci.setCompany_name(object.getString("qymc"));
 			ci.setCompany_address(object.getString("jycs"));
+			ci.setStreet_name(this.getStreet(object.getString("jycs")));
+			ci.setIndustry_name(object.getString("ssztlxmc"));
 			session.clear();
 			List list = session.createCriteria(CompanyWarn.class)
 			.add(Restrictions.eq("company_id", object.getString("zzjgdm"))).list();
@@ -165,6 +186,10 @@ public class CompanyInfoDao {
 			ci.setIs_case("false");
 			clist.add(ci);
 		}
+		session.clear();
+		List oldList = session.createCriteria(CompanyInfo.class).list();
+		session.close();
+		hu.batchDelete(oldList);
 		hu.batchSave(clist);
 		return clist;
 		}
@@ -189,7 +214,7 @@ public class CompanyInfoDao {
 		System.out.println("input result"+result);
 		JSONObject obj = JSONObject.fromObject(result);
 		String status = obj.getString("status");
-		if(status!=null&&status.equals("overtime")){
+		if(status!=null&&status.equals("timeout")){
 			session.beginTransaction();
 			session.delete(session.createCriteria(CompanyKey.class).uniqueResult());
 			session.getTransaction().commit();
@@ -197,10 +222,8 @@ public class CompanyInfoDao {
 			deptkey = this.getCompanyKey();
 			para = ("dept="+dept+"&"+"deptkey="+deptkey+"&keyword="+keyword+"&ServiceCode="+ServiceCode+"&startDate=&endDate=").toString();
 			result = this.httpUrlConnection(url, para);
+			obj = JSONObject.fromObject(result);
 			JSONArray array = obj.getJSONArray("data");
-//			List tempList = null;
-//			if(array.size()>50)
-//				tempList = array.subList(0, 50);
 			List clist = new ArrayList<>();
 			for (Iterator iterator = array.iterator(); iterator.hasNext();) {
 				JSONObject object = (JSONObject) iterator.next();
@@ -208,6 +231,8 @@ public class CompanyInfoDao {
 				ci.setCompany_id(object.getString("zzjgdm"));
 				ci.setCompany_name(object.getString("qymc"));
 				ci.setCompany_address(object.getString("jycs"));
+				ci.setStreet_name(this.getStreet(object.getString("jycs")));
+				ci.setIndustry_name(object.getString("ssztlxmc"));
 				session.clear();
 				List list = session.createCriteria(CompanyWarn.class)
 				.add(Restrictions.eq("company_id", object.getString("zzjgdm"))).list();
@@ -230,6 +255,7 @@ public class CompanyInfoDao {
 			ci.setCompany_id(object.getString("zzjgdm"));
 			ci.setCompany_name(object.getString("qymc"));
 			ci.setCompany_address(object.getString("jycs"));
+			ci.setStreet_name(this.getStreet(object.getString("jycs")));
 			session.clear();
 			List list = session.createCriteria(CompanyWarn.class)
 			.add(Restrictions.eq("company_id", object.getString("zzjgdm"))).list();
@@ -339,9 +365,35 @@ public class CompanyInfoDao {
 		return new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
 	}
 	
+	public String getStreet(String dz){
+		if(dz!=null){
+			if(dz.contains("新安"))
+				return "新安";
+			if(dz.contains("西乡"))
+				return "西乡";
+			if(dz.contains("沙井"))
+				return "沙井";
+			if(dz.contains("福永"))
+				return "福永";
+			if(dz.contains("石岩"))
+				return "石岩";
+			if(dz.contains("松岗"))
+				return "松岗";
+		}
+		return "";
+	}
 	
 	public static void main(String[] args) throws ParseException {
 		CompanyInfoDao cd = new CompanyInfoDao();
-		cd.getCompanyKey();
+//		cd.listCompanyInfo();
+		String dept = "164";
+		String deptkey = "A754B46DED0BF25A5ED793A9351B3D76";
+		String keyword = "44";
+		String ServiceCode = "spgzxx";
+		String url = "http://10.99.84.38:82/api/SsztService.asmx/GetSSZTSelect";
+		String para = ("dept="+dept+"&"+"deptkey="+deptkey+"&keyword="+keyword+"&ServiceCode="+ServiceCode+"&startDate=&endDate=").toString();
+		String result = cd.httpUrlConnection(url, para);
+		System.out.println(result);
+		
 	}
 }

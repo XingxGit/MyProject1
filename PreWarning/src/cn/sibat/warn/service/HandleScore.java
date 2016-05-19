@@ -1,10 +1,10 @@
 package cn.sibat.warn.service;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,41 +14,56 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cn.sibat.warn.model.kpi.KPILightScore;
-import cn.sibat.warn.util.HashUtil;
 
 public class HandleScore {
 
 	public void calScore(String company_id) throws Exception {
+		System.out.println("begin to calScore !");
+		List<String> redList = new ArrayList<>();
+		redList.add("拖欠工资3个月及以上");
+		redList.add("工资未足额支付正班工资");
+		redList.add("非法用工童工");
+		redList.add("非法用工无证派遣工");
+		redList.add("集体争议、群体诉求人数占全厂员工比重50%以上");
+		redList.add("拟搬迁生产(经营)、企业收购兼并");
+		redList.add("生产(经营)停顿");
+		redList.add("经济性裁员20%以上");
+		redList.add("法定代表人或经营者失联");
+		redList.add("行政处罚停止生产(经营)整顿");
+		redList.add("主管机关依法取缔");
 		Connection conn = null;
 		String sql;
 		List<String> kpiList = new ArrayList<>();
 		List<String> upList = new ArrayList<>();
-		Map<String,Double> upMap = new HashMap<>();
+		Map<String,String> upMap = new HashMap<>();
 		PreparedStatement  stmt;
+		Statement st;  
+		Boolean redIndicate = false;
 		String url = "jdbc:mysql://localhost:3306/prewarning?"
 				+ "user=root&password=1234&useUnicode=true&characterEncoding=UTF8";
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
 			sql = "select kpi_name from kpi";
 			stmt = conn.prepareStatement(sql);
+			st = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				kpiList.add(rs.getString(1));
 			}
-			sql = "select kpi_ids,value from case_upload where company_id='"+company_id+"'";
-			stmt = conn.prepareStatement(sql);
-			rs = stmt.executeQuery(sql);
+			sql = "select second_kpi,third_kpi from kpi_light_score,case_upload where kpi_light_score.third_kpi=case_upload.kpi_ids and case_upload.company_id='"+company_id+"'";
+			rs = st.executeQuery(sql);
 			while(rs.next()){
+				if(redList.contains(rs.getString(2)))
+					redIndicate = true;
 				upList.add(rs.getString(1));
-				upMap.put(rs.getString(1), Double.valueOf(rs.getString(2)));
+				upMap.put(rs.getString(2), "");
 			}
 			kpiList.removeAll(upList);
-			Map<String,String> smap = AchiScore.getSeIndex(upMap);
+			Map<String,String> smap = upMap;
 			List<KPILightScore> ksList = new ArrayList<>();
 			for(String s:smap.keySet()){
-				sql = "select green_score,blue_score,yellow_score,red_score from kpi_light_score where second_kpi='"+s+"'"+" and third_kpi='"+smap.get(s)+"'";
-				stmt = conn.prepareStatement(sql);
-				rs = stmt.executeQuery(sql);
+				sql = "select green_score,blue_score,yellow_score,red_score from kpi_light_score where third_kpi='"+s+"'";
+				rs = st.executeQuery(sql);
 				while(rs.next()){
 					KPILightScore kls = new KPILightScore();
 					kls.setSecond_kpi(s);
@@ -77,8 +92,7 @@ public class HandleScore {
 			
 			for(KPILightScore kls:ksList){
 				sql = "select kpi_weight,green_weight,blue_weight,yellow_weight,red_weight from kpi where kpi_name='"+kls.getSecond_kpi()+"'";
-				stmt = conn.prepareStatement(sql);
-				rs = stmt.executeQuery(sql);
+				rs = st.executeQuery(sql);
 				while(rs.next()){
 					gscore += rs.getDouble(1)*rs.getDouble(2)*kls.getGreen_score();
 					bscore += rs.getDouble(1)*rs.getDouble(3)*kls.getBlue_score();
@@ -95,20 +109,35 @@ public class HandleScore {
 			for (Double d : tmap.keySet()) {
 				lightGrade = tmap.get(d);
 			}
+			
+			if(redIndicate)
+				lightGrade = "red";
 			Date create_time = null;
 			sql = "select * from company_warn where company_id='"+company_id+"'";
-			stmt = conn.prepareStatement(sql);
-			rs = stmt.executeQuery(sql);
+			rs = st.executeQuery(sql);
 			while(rs.next()){
 				create_time = rs.getTimestamp(3);
 			}
 			
 			sql = "delete from company_warn where company_id='"+company_id+"'";
-			stmt = conn.prepareStatement(sql);
-			stmt.execute(sql);
+			st.execute(sql);
+			
+			sql = "update company_info set is_case = 'true' where company_id='"+company_id+"'";
+			st.execute(sql);
+			
+			String company_address = "";
+			String company_name = "";
+			String street_name = "";
+			sql = "select company_address,company_name,street_name from company_info where company_id='"+company_id+"'";
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				company_address = rs.getString(1);
+				company_name = rs.getString(2);
+				street_name = rs.getString(3);
+			}
 			
 			
-			sql = "insert into company_warn(company_id,green_score,blue_score,yellow_score,red_score,light_grade,create_time,modify_time,time) values(?,?,?,?,?,?,?,?,?)";
+			sql = "insert into company_warn(company_id,green_score,blue_score,yellow_score,red_score,light_grade,create_time,modify_time,time,company_address,company_name,street_name) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, company_id);
 			stmt.setDouble(2, gscore);
@@ -116,20 +145,31 @@ public class HandleScore {
 			stmt.setDouble(4, yscore);
 			stmt.setDouble(5, rscore);
 			stmt.setString(6, lightGrade);
+			stmt.setString(10, company_address);
+			stmt.setString(11, company_name);
+			stmt.setString(12, street_name);
 			if(create_time!=null){
 			stmt.setTimestamp(7, new java.sql.Timestamp(create_time.getTime()));
+			stmt.setTimestamp(8, new java.sql.Timestamp(new Date().getTime()));
 			}else{
 			stmt.setTimestamp(7, new java.sql.Timestamp(new Date().getTime()));
 			stmt.setTimestamp(8, new java.sql.Timestamp(new Date().getTime()));
 			}
 			stmt.setString(9, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-			stmt.execute();
+			stmt.addBatch();
+			stmt.executeBatch();
+			Thread.sleep(1000);
+			st.close();
 			stmt.close();
 			conn.close();
+			System.out.println("finish calScore!");
 	}
 	
+	
+	
+	
 	public static void main(String[] args) throws Exception {
-		new HandleScore().calScore("tesy8");
+		new HandleScore().calScore("34253829X");
 	}
 
 }

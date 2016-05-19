@@ -11,8 +11,9 @@ import cn.sibat.warn.util.HashUtil;
 @Entity( name = "company_info")
 public class CompanyInfo implements Serializable{
 	private static final long serialVersionUID = 3319771014481485461L;
+	private String id;
 	private String company_id;
-	private String industry_id;
+	private String industry_name;
 	private String company_size;
 	private String company_address;
 	private String contacts_name;
@@ -26,8 +27,15 @@ public class CompanyInfo implements Serializable{
 	public CompanyInfo() {
 		super();
 		this.create_time = new Date();
+		this.id = HashUtil.getRandomId();
 	}
 	@Id
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getCompany_id() {
 		return company_id;
 	}
@@ -36,11 +44,12 @@ public class CompanyInfo implements Serializable{
 	}
 	
 	
-	public String getIndustry_id() {
-		return industry_id;
+	
+	public String getIndustry_name() {
+		return industry_name;
 	}
-	public void setIndustry_id(String industry_id) {
-		this.industry_id = industry_id;
+	public void setIndustry_name(String industry_name) {
+		this.industry_name = industry_name;
 	}
 	public String getCompany_size() {
 		return company_size;

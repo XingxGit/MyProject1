@@ -1,8 +1,11 @@
 package cn.sibat.warn.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -17,10 +20,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.cases.CaseUpload;
+import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
 import cn.sibat.warn.serve.hib.dao.ProcessDao;
+import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import cn.sibat.warn.service.AlgoExcutorService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -32,6 +37,7 @@ public class Case {
 	@Autowired JdbcTemplate jdbcTemplate;
 	@Autowired Auth auth;
 	@Autowired CaseDao caseDao;
+	@Autowired CompanyInfoDao infoDao;
 	@Autowired ProcessDao processDao;
 	Logger log = Logger.getLogger(Case.class);
 	@RequestMapping(value="upload_case",produces="application/json;charset=UTF-8") 
@@ -50,23 +56,26 @@ public class Case {
 			return x;
 		}*/
 		log.info("execution upload_case api");
+		System.out.println(content);
 		JSONArray array = JSONArray.fromObject(content);
 		List list = new ArrayList<>();
+		HashMap<String, String> map = new HashMap<>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
 			CaseUpload cs = new CaseUpload();
-			if(obj.containsKey("company_id")&&obj.containsKey("kpi_ids")){
+			if(obj.containsKey("company_id")){
 				System.out.println(obj.containsKey("company_id"));
 				set.add(obj.getString("company_id"));
 				cs.setCompany_id(obj.getString("company_id"));
-				cs.setKpi_ids(obj.getString("kpi_ids"));
-				CaseUpload cp = caseDao.searchCaseByIds(obj.getString("company_id"), obj.getString("kpi_ids"));
-				if(cp!=null){
-					cp.setValue(obj.containsKey("value")==true?cp.getValue():Double.valueOf(obj.getString("value")));
-				caseDao.updateCase(cp);
-				continue;
-				}
+				
 			}
+			if(obj.containsKey("kpi_ids")){
+				cs.setKpi_ids(obj.getString("kpi_ids"));
+			}else{
+				continue;
+			}
+			if(obj.containsKey("source"))
+				cs.setSource(obj.getString("source"));
 			if(obj.containsKey("agency"))
 				cs.setAgency(obj.getString("agency"));
 			if(obj.containsKey("user_id")){
@@ -75,22 +84,41 @@ public class Case {
 				if(user!=null)
 					cs.setPrior(user.getPrior());
 			}
-			if(obj.containsKey("value"))
-				cs.setValue(Double.valueOf(obj.getString("value")));
+			map.put(obj.getString("company_id"), obj.getString("agency"));
 			list.add(cs);
 		}
+		for (String s : set) {
+			CompanyInfo ci = infoDao.searchCompanyInfo(s);
+			if(ci==null){
+				try {
+					List iList = infoDao.getCompanyInfo(s);
+					if(iList!=null&&iList.size()>0){
+						ci = (CompanyInfo) iList.get(0);
+						infoDao.saveCompanyInfo(ci);
+					}
+				} catch (ParseException e) {
+					System.out.println("get company info error!");
+				}
+				
+			}
+			
+		}
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			caseDao.deleteCase(entry.getKey(),entry.getValue());
+			 }
+		
 			caseDao.saveListCase(list);
 			AlgoExcutorService algo = AlgoExcutorService.getInstance();
 			for (String s : set) {
 				algo.getBlockQueue().offer(s);
 			}
-			for (String s : set) {
-				if(processDao.searchCaseInspection(s)==null){
-					CasePending cp = new CasePending();
-					cp.setCompany_id(s);
-					processDao.savePendingCase(cp);
-				}
-			}
+//			for (String s : set) {
+//				if(processDao.searchCaseInspection(s)==null){
+//					CasePending cp = new CasePending();
+//					cp.setCompany_id(s);
+//					processDao.savePendingCase(cp);
+//				}
+//			}
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");
@@ -103,15 +131,15 @@ public class Case {
 			@RequestParam("agency") String agency,
 			HttpSession session
 			){
-		Boolean sign = auth.checkUser(session);
-		if(sign==false){
-			log.info("not sign in but use search_case");
-			Xing x = new Xing();
-			x.setSuccess(false);
-			x.setMsg("对不起，请先登录！");
-			return x;
-		}
-		log.info("execution upload_case api");
+//		Boolean sign = auth.checkUser(session);
+//		if(sign==false){
+//			log.info("not sign in but use search_case");
+//			Xing x = new Xing();
+//			x.setSuccess(false);
+//			x.setMsg("对不起，请先登录！");
+//			return x;
+//		}
+		log.info("execution search_case api");
 		
 		List list = caseDao.searchCase(company_id, agency);
 		for (int i = 0; i < list.size(); i++) {
@@ -156,14 +184,14 @@ public class Case {
 	@RequestMapping(value="light_companyinfo",produces="application/json;charset=UTF-8") 
 	@ResponseBody
 	public Xing searchLightCompanyInfo(@RequestParam("light_grade") String light_grade,HttpSession session){
-		Boolean sign = auth.checkUser(session);
-		if(sign==false){
-			log.info("not sign in but use light_companyinfo");
-			Xing x = new Xing();
-			x.setSuccess(false);
-			x.setMsg("对不起，请先登录！");
-			return x;
-		}
+//		Boolean sign = auth.checkUser(session);
+//		if(sign==false){
+//			log.info("not sign in but use light_companyinfo");
+//			Xing x = new Xing();
+//			x.setSuccess(false);
+//			x.setMsg("对不起，请先登录！");
+//			return x;
+//		}
 		log.info("execution light_companyinfo api");
 		List cwlist = caseDao.searchLightCase(light_grade);
 		Xing x = new Xing();
