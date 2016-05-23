@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 
 import cn.sibat.warn.model.cases.CaseUpload;
+import cn.sibat.warn.model.kpi.KPILightScore;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
+import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -22,6 +24,7 @@ import net.sf.json.JSONObject;
 public class Score {
 	@Autowired Auth auth;
 	@Autowired CaseDao caseDao;
+	@Autowired CompanyInfoDao ciDao;
 	@RequestMapping(value="deduct_score_detail",produces="application/json;charset=UTF-8") 
 	@ResponseBody
 	public Xing listCompanyCaseKPI(@RequestParam("company_id") String company_id){
@@ -48,8 +51,15 @@ public class Score {
 		for (CaseUpload cu : list) {
 			JSONObject obj = new JSONObject();
 			obj.put("agency", cu.getAgency());
+			obj.put("user_id", cu.getUser_id());
 			if(auth.findUser(cu.getUser_id())!=null)
 			obj.put("user_name", auth.findUser(cu.getUser_id()).getName());
+			obj.put("kpi_ids", cu.getKpi_ids());
+			KPILightScore kls = caseDao.searchKpiLight(cu.getKpi_ids());
+			obj.put("red", kls.getRed_score());
+			obj.put("yellow", kls.getYellow_score());
+			obj.put("blue", kls.getBlue_score());
+			obj.put("green", kls.getGreen_score());
 			obj.put("upload_time", cu.getUpload_time());
 			array.add(obj);
 		}

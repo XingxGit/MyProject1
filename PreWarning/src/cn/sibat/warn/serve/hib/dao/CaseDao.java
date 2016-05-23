@@ -15,6 +15,7 @@ import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.model.company.CompanyInfo;
 import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.kpi.KPI;
+import cn.sibat.warn.model.kpi.KPILightScore;
 import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import cn.sibat.warn.util.HibSession;
 import cn.sibat.warn.util.HibUtil;
@@ -99,6 +100,13 @@ public class CaseDao {
 	public void  saveCompany(CompanyInfo ci){
 		hu.save(ci);
 		
+	}
+	
+	public KPILightScore searchKpiLight(String kpi){
+		Session session = hs.getSessionFactory().openSession();
+		KPILightScore k = (KPILightScore) session.createCriteria(KPILightScore.class)
+		.add(Restrictions.eq("third_kpi", kpi)).uniqueResult();
+		return k;
 	}
 	
 	public List searchCompany(String input){

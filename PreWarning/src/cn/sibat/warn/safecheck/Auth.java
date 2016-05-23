@@ -24,6 +24,7 @@ public class Auth {
 		ProjectionList proList = Projections.projectionList();
         proList.add(Projections.alias(Projections.groupProperty("user_id"), "user_id"));
         proList.add(Projections.alias(Projections.groupProperty("rank"), "rank"));
+        proList.add(Projections.alias(Projections.groupProperty("agency"), "agency"));
         User user  =  (User) session.createCriteria(User.class)
 		.add(Restrictions.eq("name", name))
 		.add(Restrictions.eq("password", pwd))

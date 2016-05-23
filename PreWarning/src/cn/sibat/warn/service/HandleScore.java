@@ -62,11 +62,11 @@ public class HandleScore {
 			Map<String,String> smap = upMap;
 			List<KPILightScore> ksList = new ArrayList<>();
 			for(String s:smap.keySet()){
-				sql = "select green_score,blue_score,yellow_score,red_score from kpi_light_score where third_kpi='"+s+"'";
+				sql = "select green_score,blue_score,yellow_score,red_score,second_kpi from kpi_light_score where third_kpi='"+s+"'";
 				rs = st.executeQuery(sql);
 				while(rs.next()){
 					KPILightScore kls = new KPILightScore();
-					kls.setSecond_kpi(s);
+					kls.setSecond_kpi(rs.getString(5));
 					kls.setGreen_score(rs.getDouble(1));
 					kls.setBlue_score(rs.getDouble(2));
 					kls.setYellow_score(rs.getDouble(3));
@@ -82,7 +82,6 @@ public class HandleScore {
 				kls.setYellow_score(0d);
 				kls.setRed_score(0d);
 				ksList.add(kls);
-				break;
 			}
 			
 			Double gscore = 0d;
@@ -128,16 +127,18 @@ public class HandleScore {
 			String company_address = "";
 			String company_name = "";
 			String street_name = "";
-			sql = "select company_address,company_name,street_name from company_info where company_id='"+company_id+"'";
+			String industry_name = "";
+			sql = "select company_address,company_name,street_name,industry_name from company_info where company_id='"+company_id+"'";
 			rs = st.executeQuery(sql);
 			while(rs.next()){
 				company_address = rs.getString(1);
 				company_name = rs.getString(2);
 				street_name = rs.getString(3);
+				industry_name = rs.getString(4);
 			}
 			
 			
-			sql = "insert into company_warn(company_id,green_score,blue_score,yellow_score,red_score,light_grade,create_time,modify_time,time,company_address,company_name,street_name) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+			sql = "insert into company_warn(company_id,green_score,blue_score,yellow_score,red_score,light_grade,create_time,modify_time,time,company_address,company_name,street_name,industry_name) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, company_id);
 			stmt.setDouble(2, gscore);
@@ -148,6 +149,7 @@ public class HandleScore {
 			stmt.setString(10, company_address);
 			stmt.setString(11, company_name);
 			stmt.setString(12, street_name);
+			stmt.setString(13, industry_name);
 			if(create_time!=null){
 			stmt.setTimestamp(7, new java.sql.Timestamp(create_time.getTime()));
 			stmt.setTimestamp(8, new java.sql.Timestamp(new Date().getTime()));
@@ -158,7 +160,6 @@ public class HandleScore {
 			stmt.setString(9, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			stmt.addBatch();
 			stmt.executeBatch();
-			Thread.sleep(1000);
 			st.close();
 			stmt.close();
 			conn.close();
