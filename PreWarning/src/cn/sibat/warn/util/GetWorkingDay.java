@@ -43,21 +43,18 @@ public class GetWorkingDay {
         int days = getDaysBetween(snextM, enextM);   
         //获取这两个周一之间的工作日数(两个周一之间的天数肯定能被7整除，并且工作日数量占其中的5/7)   
         int workdays = days/7*5;  
-        System.out.println("workdays = "+workdays);
         //获取开始时间的偏移量   
         int scharge = 0;   
         
         if(sdate.get(Calendar.DAY_OF_WEEK)!=1 && sdate.get(Calendar.DAY_OF_WEEK)!=7){   
             //只有在开始时间为非周末的时候才计算偏移量   
             scharge = (7-sdate.get(Calendar.DAY_OF_WEEK));   
-          System.out.println("scharge = "+scharge);
         }   
         //获取结束时间的偏移量   
         int echarge = 0;   
         if(edate.get(Calendar.DAY_OF_WEEK)!=1 && edate.get(Calendar.DAY_OF_WEEK)!=7){   
             //只有在结束时间为非周末的时候才计算偏移量   
             echarge = (7-edate.get(Calendar.DAY_OF_WEEK));   
-           System.out.println("echarge = "+echarge);
         }   
         //计算最终结果，具体为：workdays加上开始时间的时间偏移量，减去结束时间的时间偏移量   
         return workdays+scharge-echarge;   

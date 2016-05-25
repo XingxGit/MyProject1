@@ -68,7 +68,7 @@
             </property>
             <!-- cron表达式 -->
             <property name="cronExpression">
-                <value>5,10,15,20,25,30,35,40,45,50,55 * * * * ?</value>
+                <value>0 0 */1 * * ?</value>
             </property>
         </bean>
         <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -16,6 +17,7 @@ import net.sf.json.JSONObject;
 @Service
 public class StatisticsDao {
 	@Autowired HibSession hs;
+	Logger log = Logger.getLogger(StatisticsDao.class);
 	public  JSONObject getCompanyLightsVol(){
 		Session session = hs.getSessionFactory().openSession();
 		JSONObject obj = new JSONObject();
@@ -53,7 +55,7 @@ public class StatisticsDao {
 		return obj;
 	}
 	@SuppressWarnings("unchecked")
-	public JSONObject getWarnCompanyVol(String time){
+	public JSONObject getWarnCompanyVol(String time, String light_grade){
 		Session session = hs.getSessionFactory().openSession();
 		JSONObject obj = new JSONObject();
 		Integer xinan = 0;
@@ -62,6 +64,7 @@ public class StatisticsDao {
 		Integer shajing = 0;
 		Integer songgang = 0;
 		Integer shiyan = 0;
+		if(light_grade!=null&&light_grade.equals("合计")){
 		if(time!=null&&time.equals("0")){
 			String s = new SimpleDateFormat("yyyy").format(new Date());
 			
@@ -97,6 +100,50 @@ public class StatisticsDao {
 					case "石岩":shiyan++;break;
 				}
 			}
+		}
+		}else{
+			
+			if(time!=null&&time.equals("0")){
+				String s = new SimpleDateFormat("yyyy").format(new Date());
+				
+				List<CompanyWarn> list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("light_grade", getLight(light_grade)))
+				.list();
+				for (CompanyWarn cw : list) {
+					switch(cw.getStreet_name()){
+						case "新安":xinan++;break;
+						case "西乡":xixiang++;break;
+						case "福永":fuyong++;break;
+						case "沙井":shajing++;break;
+						case "松岗":songgang++;break;
+						case "石岩":shiyan++;break;
+					}
+				}
+				
+			}else if(time!=null){
+				String s = "";
+				if(time.length()==1){
+					s = "-0"+time+"-";
+				}else{
+					s = "-"+time+"-";
+				}
+				List<CompanyWarn> list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("light_grade", getLight(light_grade)))
+				.list();
+				for (CompanyWarn cw : list) {
+					switch(cw.getStreet_name()){
+						case "新安":xinan++;break;
+						case "西乡":xixiang++;break;
+						case "福永":fuyong++;break;
+						case "沙井":shajing++;break;
+						case "松岗":songgang++;break;
+						case "石岩":shiyan++;break;
+					}
+				}
+			}
+			
 		}
 		obj.put("新安", xinan);
 		obj.put("西乡", xixiang);
@@ -323,6 +370,7 @@ public class StatisticsDao {
 	}
 	
 	public JSONObject getTotalWarnVol(String street_name,String light_grade){
+		
 		JSONObject obj = new JSONObject();
 		Session session = hs.getSessionFactory().openSession();
 		String s = new SimpleDateFormat("MM").format(new Date());
@@ -394,7 +442,6 @@ public class StatisticsDao {
 						list = session.createCriteria(CompanyWarn.class)
 							.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
 							.add(Restrictions.eq("street_name", street_name))
-							.add(Restrictions.eq("light_grade", light_grade))
 							.list();
 						obj.put(i+"月", list==null?0:list.size());
 					}else{
@@ -402,7 +449,6 @@ public class StatisticsDao {
 						list = session.createCriteria(CompanyWarn.class)
 							.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
 							.add(Restrictions.eq("street_name", street_name))
-							.add(Restrictions.eq("light_grade", light_grade))
 							.list();
 						obj.put(i+"月", list==null?0:list.size());
 					}
@@ -414,5 +460,16 @@ public class StatisticsDao {
 		}
 		
 		return obj;
+	}
+	
+	public static String getLight(String grade){
+		switch(grade){
+		case "红灯": return "red";
+		case "黄灯": return "yellow";
+		case "蓝灯": return "blue";
+		case "绿灯": return "green";
+		
+		}
+		return null;
 	}
 }

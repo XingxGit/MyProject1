@@ -40,7 +40,7 @@ public class Statistics {
 			@RequestParam("light_grade") String light_grade){
 		log.info("execution search_charts api");
 		JSONObject objs = new JSONObject();
-		JSONObject obj = statisticsDao.getCompanyLightsVol();
+		JSONObject obj = statisticsDao.getWarnCompanyVol(time,light_grade);
 		objs.put("chart1", obj);
 		obj = statisticsDao.getDefuseStatusVol(time, street_name,light_grade);
 		objs.put("chart2", obj);

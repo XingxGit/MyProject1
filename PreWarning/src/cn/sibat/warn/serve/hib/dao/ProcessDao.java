@@ -15,7 +15,6 @@ import com.alibaba.fastjson.JSONArray;
 import cn.sibat.warn.json.util.JsonBuilder;
 import cn.sibat.warn.json.util.JsonConcat;
 import cn.sibat.warn.model.cases.CaseOverTime;
-import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.conduct.CaseInspection;
 import cn.sibat.warn.model.conduct.Conclusion;
@@ -147,9 +146,7 @@ public class ProcessDao {
 		return c;
 	}
 	
-	public void savePendingCase(CasePending cp){
-		hu.save(cp);
-	}
+	
 	
 	public CaseInspection searchCaseInspection(String company_id){
 		Session session = hs.getSessionFactory().openSession();
@@ -167,6 +164,14 @@ public class ProcessDao {
 		return c;
 	}
 	
+	public LightPending searchLightPendingByCid(String company_id){
+		Session session = hs.getSessionFactory().openSession();
+		LightPending c =  (LightPending) session.createCriteria(LightPending.class)
+				.add(Restrictions.eq("company_id", company_id))
+				.uniqueResult();
+		return c;
+	}
+	
 	public List searchInspectPending(String user_id){
 		Session session = hs.getSessionFactory().openSession();
 		List c =  session.createCriteria(InspectPending.class)
@@ -181,5 +186,13 @@ public class ProcessDao {
 				.add(Restrictions.eq("street_name", street_name))
 				.list();
 		return c;
+	}
+	
+	public void saveLightPending(LightPending lp){
+		hu.save(lp);
+	}
+	
+	public void updateLightPending(LightPending lp){
+		hu.update(lp);
 	}
 }

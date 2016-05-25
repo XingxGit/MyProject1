@@ -21,6 +21,7 @@ public class CompanyWarn {
 	private String company_name;
 	private String company_address;
 	private String industry_name;
+	private String status;
 	
 	
 	public CompanyWarn() {
@@ -128,6 +129,14 @@ public class CompanyWarn {
 
 	public void setIndustry_name(String industry_name) {
 		this.industry_name = industry_name;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	

@@ -2,6 +2,7 @@ package cn.sibat.warn.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.sibat.warn.model.cases.CasePending;
 import cn.sibat.warn.model.cases.CaseUpload;
 import cn.sibat.warn.model.company.CompanyInfo;
+import cn.sibat.warn.model.pending.LightPending;
 import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.safecheck.Auth;
 import cn.sibat.warn.serve.hib.dao.CaseDao;
@@ -112,13 +113,20 @@ public class Case {
 			for (String s : set) {
 				algo.getBlockQueue().offer(s);
 			}
-//			for (String s : set) {
-//				if(processDao.searchCaseInspection(s)==null){
-//					CasePending cp = new CasePending();
-//					cp.setCompany_id(s);
-//					processDao.savePendingCase(cp);
-//				}
-//			}
+			for (String s : set) {
+				if(s==null||s.equals("null")||s.equals(""))continue;
+				LightPending lp = processDao.searchLightPendingByCid(s);
+				if(lp==null){
+					LightPending cp = new LightPending();
+					cp.setCompany_id(s);
+					cp.setUser_id("6");
+					processDao.saveLightPending(cp);
+				}else{
+					lp.setStatus("uncheck");
+					lp.setModify_time(new Date());
+					processDao.updateLightPending(lp);
+				}
+			}
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");

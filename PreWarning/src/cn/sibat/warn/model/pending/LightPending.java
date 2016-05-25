@@ -12,10 +12,15 @@ public class LightPending {
 	private String user_id;
 	private String light_grade;
 	private Date create_time;
+	private Date modify_time;
 	private String reform_type;
+	private String status;
 	public LightPending() {
 		super();
+		this.create_time = new Date();
+		this.modify_time = new Date();
 		this.reform_type = "亮灯";
+		this.status = "uncheck";
 	}
 	@Id
 	public String getCompany_id() {
@@ -47,6 +52,18 @@ public class LightPending {
 	}
 	public void setReform_type(String reform_type) {
 		this.reform_type = reform_type;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public Date getModify_time() {
+		return modify_time;
+	}
+	public void setModify_time(Date modify_time) {
+		this.modify_time = modify_time;
 	}
 	
 	

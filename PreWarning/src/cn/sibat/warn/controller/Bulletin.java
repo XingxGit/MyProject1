@@ -14,8 +14,10 @@ import com.alibaba.fastjson.JSONArray;
 
 import cn.sibat.warn.model.cases.CaseOverTime;
 import cn.sibat.warn.model.company.CompanyInfo;
+import cn.sibat.warn.model.company.CompanyWarn;
 import cn.sibat.warn.model.pending.InspectPending;
 import cn.sibat.warn.model.pending.LightPending;
+import cn.sibat.warn.serve.hib.dao.CaseDao;
 import cn.sibat.warn.serve.hib.dao.ProcessDao;
 import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import net.sf.json.JSONObject;
@@ -26,7 +28,7 @@ import net.sf.json.JSONObject;
 public class Bulletin {
 	@Autowired ProcessDao processDao;
 	@Autowired CompanyInfoDao companyInfoDao;
-	
+	@Autowired CaseDao caseDao;
 	@ResponseBody
 	@RequestMapping(value="reform",produces="application/json;charset=UTF-8") 
 	public Xing reform(@RequestParam("user_id")String user_id) throws ParseException{
@@ -36,9 +38,10 @@ public class Bulletin {
 			JSONObject obj = new JSONObject();
 			obj.put("reform_type", lp.getReform_type());
 			obj.put("company_id", lp.getCompany_id());
-			CompanyInfo ci = (CompanyInfo) companyInfoDao.getCompanyInfo(lp.getCompany_id()).get(0);
-			obj.put("company_name", ci.getCompany_name());
-			obj.put("company_address", ci.getCompany_address());
+			CompanyWarn wc = caseDao.searchWarnCompany(lp.getCompany_id());
+			if(wc==null)continue;
+			obj.put("company_name", wc.getCompany_name());
+			obj.put("company_address", wc.getCompany_address());
 			array.add(obj);
 		}
 		

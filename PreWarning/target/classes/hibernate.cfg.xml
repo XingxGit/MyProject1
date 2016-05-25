@@ -9,7 +9,7 @@
 		
 		<mapping class="cn.sibat.warn.model.cases.CaseUpload" />
 		<mapping class="cn.sibat.warn.model.cases.CaseOverTime" />
-		<mapping class="cn.sibat.warn.model.cases.CasePending" />
+		
 		
 		<mapping class="cn.sibat.warn.model.company.CompanyInfo"/>
 		<mapping class="cn.sibat.warn.model.company.CompanyWarn" />
