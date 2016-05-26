@@ -341,6 +341,69 @@ public class StatisticsDao {
 			
 			List<CompanyWarn> list = session.createCriteria(CompanyWarn.class)
 			.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+			.add(Restrictions.eq("light_grade", "red"))
+			.list();
+			obj.put("红灯", list.size());
+			list = session.createCriteria(CompanyWarn.class)
+			.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+			.add(Restrictions.eq("light_grade", "yellow"))
+			.list();
+			obj.put("黄灯", list.size());
+			list = session.createCriteria(CompanyWarn.class)
+			.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+			.add(Restrictions.eq("light_grade", "blue"))
+			.list();
+			obj.put("蓝灯", list.size());
+			list = session.createCriteria(CompanyWarn.class)
+			.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+			.add(Restrictions.eq("light_grade", "green"))
+			.list();
+			obj.put("绿灯", list.size());
+		
+			}//ef
+		}else{
+			
+if(time!=null&&time.equals("0")){
+				
+				String s = new SimpleDateFormat("yyyy").format(new Date());
+				
+				List<CompanyWarn> list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("street_name", street_name))
+				.add(Restrictions.eq("light_grade", "red"))
+				.list();
+				obj.put("红灯", list.size());
+				list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("street_name", street_name))
+				.add(Restrictions.eq("light_grade", "yellow"))
+				.list();
+				obj.put("黄灯", list.size());
+				list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("street_name", street_name))
+				.add(Restrictions.eq("light_grade", "blue"))
+				.list();
+				obj.put("蓝灯", list.size());
+				list = session.createCriteria(CompanyWarn.class)
+				.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("street_name", street_name))
+				.add(Restrictions.eq("light_grade", "green"))
+				.list();
+				obj.put("绿灯", list.size());
+						
+				
+				
+			}else if(time!=null){
+			String s = "";
+			if(time.length()==1){
+				s = "-0"+time+"-";
+			}else{
+				s = "-"+time+"-";
+			}
+			
+			List<CompanyWarn> list = session.createCriteria(CompanyWarn.class)
+			.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
 			.add(Restrictions.eq("street_name", street_name))
 			.add(Restrictions.eq("light_grade", "red"))
 			.list();
@@ -365,6 +428,7 @@ public class StatisticsDao {
 			obj.put("绿灯", list.size());
 		
 			}//ef
+			
 		}
 		return obj;
 	}
@@ -436,11 +500,13 @@ public class StatisticsDao {
 					
 				}
 			}else{
+				log.info("exe this else!");
 				for(Integer i = 1; i <= m; i++){
 					if(i<10){
 						s = "-0"+i.toString()+"-";
 						list = session.createCriteria(CompanyWarn.class)
 							.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+							.add(Restrictions.eq("light_grade", getLight(light_grade)))
 							.add(Restrictions.eq("street_name", street_name))
 							.list();
 						obj.put(i+"月", list==null?0:list.size());
@@ -448,6 +514,7 @@ public class StatisticsDao {
 						s = "-"+i.toString()+"-";
 						list = session.createCriteria(CompanyWarn.class)
 							.add(Restrictions.like("time", s, MatchMode.ANYWHERE))
+							.add(Restrictions.eq("light_grade", getLight(light_grade)))
 							.add(Restrictions.eq("street_name", street_name))
 							.list();
 						obj.put(i+"月", list==null?0:list.size());

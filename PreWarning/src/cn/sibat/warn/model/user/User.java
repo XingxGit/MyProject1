@@ -24,7 +24,7 @@ public class User implements Serializable{
 	private String rank;
 	private String street_name;
 	private Integer prior;
-	
+	private String group_name;
 	
 	
 	public String getAgency() {
@@ -77,6 +77,12 @@ public class User implements Serializable{
 	public String toString() {
 		return "User [user_id=" + user_id + ", name=" + name + ", password=" + password + ", agency=" + agency
 				+ ", rank=" + rank + ", street_name=" + street_name + ", prior=" + prior + "]";
+	}
+	public String getGroup_name() {
+		return group_name;
+	}
+	public void setGroup_name(String group_name) {
+		this.group_name = group_name;
 	}
 	
 	

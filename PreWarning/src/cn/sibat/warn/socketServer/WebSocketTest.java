@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -12,16 +11,17 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+
 @ServerEndpoint("/websocket/{user_id}")
 public class WebSocketTest {
     /**
-     * 存储当前有效的session对象
+     * 实现消息的实时推送
      */
 	private static Map<String, Session> sessionMap = new HashMap<String, Session>();
     private static Queue<Session> sessionSet = new ConcurrentLinkedQueue<Session>();
-    
+    Session session;
     @OnMessage
-    public void onMessage(String message, Session currentSession) {
+    public static void onMessage(String message, Session currentSession) {
         System.out.println("Server say：Received: " + message);
         try {
         	String[] s = message.split(":");
@@ -30,7 +30,7 @@ public class WebSocketTest {
         	if(gSession!=null){
         	gSession.getBasicRemote().sendText(s[1]);
         	}else{
-        		currentSession.getBasicRemote().sendText("错误");
+//        		currentSession.getBasicRemote().sendText("错误");
         	}
         	
         	

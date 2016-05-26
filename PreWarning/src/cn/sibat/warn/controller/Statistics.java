@@ -17,11 +17,11 @@ import net.sf.json.JSONObject;
 @Controller
 //@Scope("session")
 @RequestMapping("")
+@ResponseBody
 public class Statistics {
 	Logger log = Logger.getLogger(Statistics.class);
 	@Autowired StatisticsDao statisticsDao;
 	@RequestMapping(value="light_statistics",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing getInfo(HttpSession session){
 		log.info("execution light_statistics api");
 		JSONObject obj = statisticsDao.getCompanyLightsVol();
@@ -33,7 +33,6 @@ public class Statistics {
 	}
 	
 	@RequestMapping(value="search_charts",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing getCharts(HttpSession session,
 			@RequestParam("time") String time,
 			@RequestParam("street_name") String street_name,

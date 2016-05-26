@@ -16,8 +16,9 @@ public class CaseInspection {
 	private Date inspection_time;
 	private String agency;
 	private String company_id;
-	private String result;
+	private String status;
 	private String detail;
+	private String user_id;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,17 +53,24 @@ public class CaseInspection {
 	public void setCompany_id(String company_id) {
 		this.company_id = company_id;
 	}
-	public String getResult() {
-		return result;
-	}
-	public void setResult(String result) {
-		this.result = result;
-	}
+	
 	public String getDetail() {
 		return detail;
 	}
 	public void setDetail(String detail) {
 		this.detail = detail;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 	
 	

@@ -142,7 +142,7 @@ public class CompanyInfoDao {
 			for (Iterator iterator = tempList.iterator(); iterator.hasNext();) {
 				JSONObject object = (JSONObject) iterator.next();
 				CompanyInfo ci = new CompanyInfo();
-				ci.setCompany_id(object.getString("zzjgdm"));
+				ci.setCompany_id(object.getString("zzjgdm").equals("null")?object.getString("qymc"):object.getString("zzjgdm"));
 				ci.setCompany_name(object.getString("qymc"));
 				ci.setCompany_address(object.getString("jycs"));
 				ci.setStreet_name(this.getStreet(object.getString("jycs")));

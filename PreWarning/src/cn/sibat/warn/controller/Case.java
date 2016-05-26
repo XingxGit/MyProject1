@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -34,6 +35,7 @@ import net.sf.json.JSONObject;
 @Controller
 //@Scope("session")
 @RequestMapping("")
+@ResponseBody
 public class Case {
 	@Autowired JdbcTemplate jdbcTemplate;
 	@Autowired Auth auth;
@@ -41,12 +43,14 @@ public class Case {
 	@Autowired CompanyInfoDao infoDao;
 	@Autowired ProcessDao processDao;
 	Logger log = Logger.getLogger(Case.class);
+	
 	@RequestMapping(value="upload_case",produces="application/json;charset=UTF-8") 
-	@ResponseBody
+	
 	public Xing uploadCase(
 			String content
 //			HttpSession session
 			){
+		String uid = "";
 		Set<String> set = new HashSet<>();
 		/*Boolean sign = auth.checkUser(session);
 		if(sign==false){
@@ -81,6 +85,7 @@ public class Case {
 				cs.setAgency(obj.getString("agency"));
 			if(obj.containsKey("user_id")){
 				cs.setUser_id(obj.getString("user_id"));
+				uid = obj.getString("user_id");
 				User user = auth.findUser(obj.getString("user_id"));
 				if(user!=null)
 					cs.setPrior(user.getPrior());
@@ -119,7 +124,13 @@ public class Case {
 				if(lp==null){
 					LightPending cp = new LightPending();
 					cp.setCompany_id(s);
+					User u = processDao.searchDutyUser(uid);
+					if(u!=null){
+					cp.setUser_id(u.getUser_id());
+					}else{
 					cp.setUser_id("6");
+					}
+					
 					processDao.saveLightPending(cp);
 				}else{
 					lp.setStatus("uncheck");
@@ -127,6 +138,7 @@ public class Case {
 					processDao.updateLightPending(lp);
 				}
 			}
+			
 			Xing x = new Xing();
 			x.setSuccess(true);
 			x.setMsg("ok");
@@ -134,7 +146,6 @@ public class Case {
 	}
 	
 	@RequestMapping(value="search_case",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing searchCase(@RequestParam("company_id") String company_id,
 			@RequestParam("agency") String agency,
 			HttpSession session
@@ -162,7 +173,6 @@ public class Case {
 	
 	
 	@RequestMapping(value="random_company",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing searchRandomCompany(HttpSession session){
 		log.info("execution random_company api");
 		
@@ -177,7 +187,6 @@ public class Case {
 	
 	
 	@RequestMapping(value="search_company",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing searchCompany(@RequestParam("input") String input,HttpSession session){
 		log.info("execution search_company api");
 		log.info("input is "+input);
@@ -190,7 +199,6 @@ public class Case {
 	}
 	
 	@RequestMapping(value="light_companyinfo",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing searchLightCompanyInfo(@RequestParam("light_grade") String light_grade,HttpSession session){
 //		Boolean sign = auth.checkUser(session);
 //		if(sign==false){
@@ -210,7 +218,6 @@ public class Case {
 	}
 	
 	@RequestMapping(value="jdbc",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing searchCompanyInfo(@RequestParam("company_id") String company_id,HttpSession session){
 		
 		log.info("execution light_companyinfo api");

@@ -22,6 +22,7 @@ import cn.sibat.warn.model.conduct.Defuse;
 import cn.sibat.warn.model.conduct.Inspection;
 import cn.sibat.warn.model.pending.InspectPending;
 import cn.sibat.warn.model.pending.LightPending;
+import cn.sibat.warn.model.user.User;
 import cn.sibat.warn.serve.tmp.dao.CompanyInfoDao;
 import cn.sibat.warn.util.HibSession;
 import cn.sibat.warn.util.HibUtil;
@@ -180,12 +181,34 @@ public class ProcessDao {
 		return c;
 	}
 	
+	public InspectPending searchInspectPendingByCid(String company_id){
+		Session session = hs.getSessionFactory().openSession();
+		InspectPending c =  (InspectPending) session.createCriteria(InspectPending.class)
+				.add(Restrictions.eq("company_id", company_id))
+				.uniqueResult();
+		return c;
+	}
+	
 	public List searchOverTimeCase(String street_name){
 		Session session = hs.getSessionFactory().openSession();
 		List c =  session.createCriteria(CaseOverTime.class)
 				.add(Restrictions.eq("street_name", street_name))
 				.list();
 		return c;
+	}
+	
+	public User searchDutyUser(String user_id){
+		Session session = hs.getSessionFactory().openSession();
+		User u =  (User) session.createCriteria(User.class)
+				.add(Restrictions.eq("user_id", user_id))
+				.uniqueResult();
+		String street_name = u.getStreet_name();
+		String agency = street_name+"街道办";
+		u = (User) session.createCriteria(User.class)
+				.add(Restrictions.eq("rank", agency))
+				.add(Restrictions.eq("agency", "街道办"))
+				.uniqueResult();
+		return u;
 	}
 	
 	public void saveLightPending(LightPending lp){

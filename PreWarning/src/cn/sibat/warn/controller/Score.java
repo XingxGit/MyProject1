@@ -2,6 +2,7 @@ package cn.sibat.warn.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -21,12 +22,13 @@ import net.sf.json.JSONObject;
 @Controller
 //@Scope("session")
 @RequestMapping("")
+@ResponseBody
 public class Score {
 	@Autowired Auth auth;
 	@Autowired CaseDao caseDao;
 	@Autowired CompanyInfoDao ciDao;
+	Logger log = Logger.getLogger(Score.class);
 	@RequestMapping(value="deduct_score_detail",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing listCompanyCaseKPI(@RequestParam("company_id") String company_id){
 		List<CaseUpload> list = caseDao.searchCase(company_id);
 		StringBuilder sb = new StringBuilder();
@@ -43,9 +45,10 @@ public class Score {
 	}
 	
 	@RequestMapping(value="deduct_score",produces="application/json;charset=UTF-8") 
-	@ResponseBody
 	public Xing listCompanyCase(@RequestParam("company_id") String company_id){
+		log.info(company_id);
 		List<CaseUpload> list = caseDao.searchCase(company_id);
+		log.info("list size = "+list.size());
 		JSONArray array = new JSONArray();
 		JSONObject objs = new JSONObject();
 		for (CaseUpload cu : list) {
@@ -56,10 +59,14 @@ public class Score {
 			obj.put("user_name", auth.findUser(cu.getUser_id()).getName());
 			obj.put("kpi_ids", cu.getKpi_ids());
 			KPILightScore kls = caseDao.searchKpiLight(cu.getKpi_ids());
+			if(kls!=null){
 			obj.put("red", kls.getRed_score());
 			obj.put("yellow", kls.getYellow_score());
 			obj.put("blue", kls.getBlue_score());
 			obj.put("green", kls.getGreen_score());
+			}else{
+				log.info("could not find kpi "+cu.getKpi_ids());
+			}
 			obj.put("upload_time", cu.getUpload_time());
 			array.add(obj);
 		}
@@ -67,7 +74,9 @@ public class Score {
 		Xing x = new Xing();
 		x.setSuccess(true);
 		x.setMsg("ok");
-		x.setData(new JSONObject().put("kpi_ids", objs));
+		JSONObject objss = new JSONObject();
+		objss.put("kpi_ids", objs);
+		x.setData(objss);
 		return x;
 	}
 

@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.websocket.Session;
 
 import cn.sibat.warn.model.kpi.KPILightScore;
+import cn.sibat.warn.socketServer.WebSocketTest;
 
 public class HandleScore {
-
+	Session session;
 	public void calScore(String company_id) throws Exception {
 		System.out.println("begin to calScore !");
 		List<String> redList = new ArrayList<>();
@@ -160,10 +162,14 @@ public class HandleScore {
 			stmt.setString(9, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			stmt.addBatch();
 			stmt.executeBatch();
+			
+			sql = "update light_pending set light_grade = '"+lightGrade+"'where company_id = '"+company_id+"'";
+			st.execute(sql);
 			st.close();
 			stmt.close();
 			conn.close();
 			System.out.println("finish calScore!");
+			WebSocketTest.onMessage("1:upload case", session);
 	}
 	
 	

@@ -25,6 +25,7 @@ public class Auth {
         proList.add(Projections.alias(Projections.groupProperty("user_id"), "user_id"));
         proList.add(Projections.alias(Projections.groupProperty("rank"), "rank"));
         proList.add(Projections.alias(Projections.groupProperty("agency"), "agency"));
+        proList.add(Projections.alias(Projections.groupProperty("street_name"), "street_name"));
         User user  =  (User) session.createCriteria(User.class)
 		.add(Restrictions.eq("name", name))
 		.add(Restrictions.eq("password", pwd))
@@ -40,6 +41,18 @@ public class Auth {
 		.add(Restrictions.eq("user_id", user_id))
 		.uniqueResult();
 		return user;
+	}
+	
+	public List ListUser(String street_name, String rank){
+		Session session = hs.getSessionFactory().openSession();
+		List list =  session.createCriteria(User.class)
+		.add(Restrictions.eq("street_name", street_name))
+		.add(Restrictions.eq("rank", rank))
+		.list();
+		return list;
+		
+		
+		
 	}
 	
 	
